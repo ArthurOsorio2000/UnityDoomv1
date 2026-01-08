@@ -26,12 +26,21 @@
                 },
                 {
                     "name": "Shoot",
-                    "type": "PassThrough",
+                    "type": "Button",
                     "id": "bbd42532-5801-492a-915e-d2de569955bb",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "EquipHandgun",
+                    "type": "Value",
+                    "id": "ae184fba-3dc5-484e-ba57-202f7c3bf2f1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -104,11 +113,22 @@
                 {
                     "name": "",
                     "id": "72422546-f2ab-4055-94ae-b9929024410e",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Pointer>/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7056e47b-fa28-4588-a59c-dbb34c7f5ae0",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EquipHandgun",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

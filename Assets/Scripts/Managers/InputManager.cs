@@ -57,8 +57,20 @@ public class InputManager : MonoBehaviour
 
 
     //note to self - difference between triggered and IsPressed:
-    public bool PlayerShooting()
+    //how do I make this efficient? how do I make sure hold shot isn't active when single shot is active?
+    //note to self for optimization
+    public bool PlayerHoldShot()
     {
         return playerControls.Player.Shoot.IsPressed();
+    }
+
+    public bool PlayerSingleShot()
+    {
+        return playerControls.Player.Shoot.triggered;
+    }
+
+    public bool EquipHandgun()
+    {
+        return true;
     }
 }
