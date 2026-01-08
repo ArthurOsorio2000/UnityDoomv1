@@ -1,16 +1,48 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class AudioManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private AudioSource soundEffectObject;
+    private static AudioManager _instance;
+    public static AudioManager Instance
     {
-        
+        get
+        {
+            return _instance;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Awake()
     {
-        
+        SingletonCheck();
+    }
+
+    void SingletonCheck()
+    {
+        if(_instance != null && _instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
+    public void PlaySoundEffect(AudioClip audioClip, Transform spawnTransform, float volume)
+    {
+        //spawn gameObject
+        AudioSource audioSource = Instantiate(soundEffectObject, spawnTransform.position, Quaternion.identity);
+        //assign the audioclip
+        audioSource.clip = audioClip;
+        //assign volume
+        audioSource.volume = volume;
+        //play sound
+        audioSource.Play();
+
+        float clipLength = audioSource.clip.length;
+
+        Destroy(audioSource.gameObject, clipLength);
     }
 }
