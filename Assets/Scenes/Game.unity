@@ -964,7 +964,7 @@ GameObject:
   - component: {fileID: 1133451730}
   - component: {fileID: 1133451731}
   m_Layer: 0
-  m_Name: MoveCamera
+  m_Name: Camera Player Tracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
