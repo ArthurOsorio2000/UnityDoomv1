@@ -4,6 +4,7 @@ using UnityEngine;
 //I could make a generic weapon class as a parent, and inherit it for each individual weapon?
 public class Handgun : MonoBehaviour
 {
+    [SerializeField] private AudioClip handGun;
     [SerializeField] private float damage = 10f;
     [SerializeField] private float range = 100f;
     private InputManager inputManager;
@@ -25,6 +26,7 @@ public class Handgun : MonoBehaviour
 
     void Shoot()
     {
+        AudioManager.Instance.PlaySoundEffect(handGun, transform, 1f);
         RaycastHit hit;
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range))
         {
