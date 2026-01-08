@@ -16,6 +16,7 @@ public class InputManager : MonoBehaviour
     {
         playerControls = new InputSystem_Actions();
         SingletonCheck();
+        DontDestroyOnLoad(this);
     }
 
     //ensure there is one and only one instance of this class
