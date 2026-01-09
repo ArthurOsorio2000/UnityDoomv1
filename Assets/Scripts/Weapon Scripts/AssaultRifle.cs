@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class AssaultRifle : PlayerFirearm
 {
+    public int AssaultRifleID = 1;
     [SerializeField] private AudioClip assaultRifleFireFX;
     [SerializeField] private float assaultRifleDamage = 10f;
     [SerializeField] private float assaultRifleRange = 100f;
     [SerializeField] private bool assaultRifleIsAutomatic = true;
-    [SerializeField] private float assaultRifleRateOfFire = 0.01f;
+    [SerializeField] private float assaultRifleRateOfFire = 0.12f;
 
     protected override AudioClip fireFX => assaultRifleFireFX;
     protected override float damage => assaultRifleDamage;

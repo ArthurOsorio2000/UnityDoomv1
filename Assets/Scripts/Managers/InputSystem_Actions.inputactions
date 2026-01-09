@@ -35,12 +35,21 @@
                 },
                 {
                     "name": "EquipHandgun",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "ae184fba-3dc5-484e-ba57-202f7c3bf2f1",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "EquipAssaultRifle",
+                    "type": "Button",
+                    "id": "3904b23a-1441-40c9-a311-ae7920b32dd0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -129,6 +138,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "EquipHandgun",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8edfaf1-7937-4fd5-b359-5b9788c37452",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EquipAssaultRifle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

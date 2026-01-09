@@ -44,7 +44,6 @@ public class InputManager : MonoBehaviour
         playerControls.Disable();
     }
 
-    // Update is called once per frame
     public Vector2 GetPlayerMovement()
     {
         return playerControls.Player.Movement.ReadValue<Vector2>();
@@ -71,6 +70,10 @@ public class InputManager : MonoBehaviour
 
     public bool EquipHandgun()
     {
-        return true;
+        return playerControls.Player.EquipHandgun.triggered;
+    }
+    public bool EquipAssaultRifle()
+    {
+        return playerControls.Player.EquipAssaultRifle.triggered;
     }
 }

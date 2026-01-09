@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 public class Handgun : PlayerFirearm
 {
+    public int handgunID = 0;
     [SerializeField] private AudioClip handgunFireFX;
     [SerializeField] private float handgunDamage = 10f;
     [SerializeField] private float handgunRange = 100f;
