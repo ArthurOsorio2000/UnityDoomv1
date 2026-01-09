@@ -1,13 +1,15 @@
 using UnityEngine;
-
-
-//I could make a generic weapon class as a parent, and inherit it for each individual weapon?
 public class Handgun : PlayerFirearm
-{   
+{
     [SerializeField] private AudioClip handgunFireFX;
-    protected override AudioClip fireFX => handgunFireFX;
     [SerializeField] private float handgunDamage = 10f;
-    protected override float damage => handgunDamage;
     [SerializeField] private float handgunRange = 100f;
+    [SerializeField] private bool handgunIsAutomatic = true;
+    [SerializeField] private float handgunRateOfFire = 1f;
+
+    protected override AudioClip fireFX => handgunFireFX;
+    protected override float damage => handgunDamage;
     protected override float range => handgunRange;
+    protected override bool isAutomatic => handgunIsAutomatic;
+    protected override float rateOfFire => handgunRateOfFire;
 }
