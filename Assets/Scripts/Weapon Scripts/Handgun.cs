@@ -4,7 +4,7 @@ public class Handgun : PlayerFirearm
     [SerializeField] private AudioClip handgunFireFX;
     [SerializeField] private float handgunDamage = 10f;
     [SerializeField] private float handgunRange = 100f;
-    [SerializeField] private bool handgunIsAutomatic = true;
+    [SerializeField] private bool handgunIsAutomatic = false;
     [SerializeField] private float handgunRateOfFire = 0.3f;
 
     protected override AudioClip fireFX => handgunFireFX;

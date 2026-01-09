@@ -402,8 +402,8 @@ MonoBehaviour:
   handgunFireFX: {fileID: 8300000, guid: ef4608fb4d4bf3d4f9e98e21ef14d370, type: 3}
   handgunDamage: 10
   handgunRange: 100
-  handgunCanAutoFire: 0
-  handgunfirerate: 10
+  handgunIsAutomatic: 0
+  handgunRateOfFire: 0.3
 --- !u!1 &316994365
 GameObject:
   m_ObjectHideFlags: 0

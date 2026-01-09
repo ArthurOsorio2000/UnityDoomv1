@@ -25,13 +25,23 @@ public abstract class PlayerFirearm : MonoBehaviour
     }
 
     // Update is called once per frame
-    public virtual void Update()
+    void Update()
     {
         //depending on if the gun is singleshot or not, change behaviour? will this be done in an override, or here?
-        if (inputManager.PlayerSingleShot())
-        {
-            Shoot(fireFX, damage, range, rateOfFire);
+        if(isAutomatic){
+            if (inputManager.PlayerHoldShot())
+            {
+                Shoot(fireFX, damage, range, rateOfFire);
+            }
         }
+        else
+        {
+            if (inputManager.PlayerSingleShot())
+            {
+                Shoot(fireFX, damage, range, rateOfFire);
+            }
+        }
+        //what would be more efficient? having this if statement, or an update override in automatic weapons?
     }
 
     //default fire method
