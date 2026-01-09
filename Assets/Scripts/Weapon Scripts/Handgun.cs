@@ -10,14 +10,4 @@ public class Handgun : PlayerFirearm
     protected override float damage => handgunDamage;
     [SerializeField] private float handgunRange = 100f;
     protected override float range => handgunRange;
-    new public Camera playerCamera;
-    
-    public override void Update()
-    {
-        base.Update();
-    }
-
-    public override void Shoot(AudioClip fireFX, float damage, float range)
-    {
-    } 
 }
