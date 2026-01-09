@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class PlayerFirearm : MonoBehaviour
@@ -12,6 +13,9 @@ public abstract class PlayerFirearm : MonoBehaviour
     //all the things that can stay the same/get inherited
     [SerializeField] protected Camera playerCamera;
     [SerializeField] protected InputManager inputManager;
+    
+    //initialize variable for default firerate control function in shoot method
+    protected bool canFire = true;
 
     void Start()
     {
@@ -26,7 +30,7 @@ public abstract class PlayerFirearm : MonoBehaviour
         //depending on if the gun is singleshot or not, change behaviour? will this be done in an override, or here?
         if (inputManager.PlayerSingleShot())
         {
-            Shoot(fireFX, damage, range);
+            Shoot(fireFX, damage, range, rateOfFire);
         }
     }
 
@@ -34,8 +38,9 @@ public abstract class PlayerFirearm : MonoBehaviour
     //create a coroutine to manage firerate
     //figure out how to to use the isAutomatic bool to specify how the gun controls.
     //should there be a single shot and an automatic shot method? or should the shoot method be changed per gun?
-    public virtual void Shoot(AudioClip fireFX, float damage, float range)
+    public virtual void Shoot(AudioClip fireFX, float damage, float range, float rateOfFire)
     {
+        if (canFire){
         AudioManager.Instance.PlaySoundEffect(fireFX, transform, 1f);
         RaycastHit hit;
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range))
@@ -50,5 +55,14 @@ public abstract class PlayerFirearm : MonoBehaviour
                 target.TakeDamage(damage);
             }
         }
+        canFire = false;
+        StartCoroutine(FireDelay(rateOfFire));
+        }
+    }
+
+    IEnumerator FireDelay(float rateOfFire)
+    {
+        yield return new WaitForSeconds(rateOfFire);
+        canFire = true;
     }
 }
