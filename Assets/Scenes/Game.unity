@@ -397,8 +397,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2659016972c90ca49a10066801694061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Handgun
-  playerCamera: {fileID: 330585545}
-  inputManager: {fileID: 1925892303}
+  playerCamera: {fileID: 0}
+  inputManager: {fileID: 0}
   handgunFireFX: {fileID: 8300000, guid: ef4608fb4d4bf3d4f9e98e21ef14d370, type: 3}
   handgunDamage: 10
   handgunRange: 100

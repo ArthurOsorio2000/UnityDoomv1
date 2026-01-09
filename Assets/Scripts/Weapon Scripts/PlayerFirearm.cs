@@ -13,6 +13,7 @@ public abstract class PlayerFirearm : MonoBehaviour
 
     void Start()
     {
+        playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         inputManager = InputManager.Instance;
     }
 
