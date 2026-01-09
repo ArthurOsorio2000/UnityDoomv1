@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 public class Handgun : PlayerFirearm
 {
@@ -12,4 +13,12 @@ public class Handgun : PlayerFirearm
     protected override float range => handgunRange;
     protected override bool isAutomatic => handgunIsAutomatic;
     protected override float rateOfFire => handgunRateOfFire;
+
+    protected override void UpdateWeapon()
+    {
+        if (inputManager.PlayerSingleShot())
+        {
+            Shoot(fireFX, damage, range, rateOfFire);
+        }
+    }
 }

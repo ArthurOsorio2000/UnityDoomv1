@@ -7,15 +7,14 @@ public abstract class PlayerFirearm : MonoBehaviour
     protected abstract AudioClip fireFX {get;}
     protected abstract float damage {get;}
     protected abstract float range {get;}
-    protected abstract bool isAutomatic {get;}
     protected abstract float rateOfFire {get;}
+    protected abstract bool isAutomatic {get;}
 
     //all the things that can stay the same/get inherited
     [SerializeField] protected Camera playerCamera;
     [SerializeField] protected InputManager inputManager;
-    
-    //initialize variable for default firerate control function in shoot method
-    protected bool canFire = true;
+
+    protected abstract void UpdateWeapon();
 
     void Start()
     {
@@ -27,27 +26,16 @@ public abstract class PlayerFirearm : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //depending on if the gun is singleshot or not, change behaviour? will this be done in an override, or here?
-        if(isAutomatic){
-            if (inputManager.PlayerHoldShot())
-            {
-                Shoot(fireFX, damage, range, rateOfFire);
-            }
-        }
-        else
-        {
-            if (inputManager.PlayerSingleShot())
-            {
-                Shoot(fireFX, damage, range, rateOfFire);
-            }
-        }
-        //what would be more efficient? having this if statement, or an update override in automatic weapons?
+        UpdateWeapon();
     }
 
     //default fire method
     //create a coroutine to manage firerate
     //figure out how to to use the isAutomatic bool to specify how the gun controls.
     //should there be a single shot and an automatic shot method? or should the shoot method be changed per gun?
+
+    //initialize variable for default firerate control function in shoot method
+    protected bool canFire = true;
     public virtual void Shoot(AudioClip fireFX, float damage, float range, float rateOfFire)
     {
         if (canFire){
