@@ -553,8 +553,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1649597583}
+  m_Children: []
   m_Father: {fileID: 1133451730}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
@@ -1388,7 +1387,7 @@ GameObject:
   - component: {fileID: 1133451730}
   - component: {fileID: 1133451731}
   m_Layer: 0
-  m_Name: Camera (Player Tracker)
+  m_Name: Player Camera (tracker)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1408,6 +1407,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 330585546}
+  - {fileID: 1649597583}
   - {fileID: 494985649}
   m_Father: {fileID: 1115231874}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1629,12 +1629,12 @@ Transform:
   m_GameObject: {fileID: 1649597582}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.20215, y: -0.27945995, z: -0.45731}
+  m_LocalPosition: {x: -0.20214987, y: -0.27945995, z: -0.45730996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 222108066}
-  m_Father: {fileID: 330585546}
+  m_Father: {fileID: 1133451730}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1741650119
 GameObject:
