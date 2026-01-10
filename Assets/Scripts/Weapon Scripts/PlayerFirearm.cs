@@ -23,6 +23,11 @@ public abstract class PlayerFirearm : MonoBehaviour
         inputManager = InputManager.Instance;
     }
 
+    void OnEnable()
+    {
+        canFire = true;
+    }
+
     // Update is called once per frame
     void Update()
     {
