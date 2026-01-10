@@ -4,11 +4,11 @@ using UnityEngine;
 public abstract class PlayerFirearm : MonoBehaviour
 {
     //all the things that need to be changed by the inheriting weapons
-    protected abstract AudioClip fireFX {get;}
-    protected abstract float damage {get;}
-    protected abstract float range {get;}
-    protected abstract float rateOfFire {get;}
-    protected abstract bool isAutomatic {get;}
+    [SerializeField] protected AudioClip fireFX;
+    [SerializeField] protected float damage;
+    [SerializeField] protected float range;
+    [SerializeField] protected float rateOfFire;
+    [SerializeField] protected bool isAutomatic;
 
     //all the things that can stay the same/get inherited
     protected Camera playerCamera;

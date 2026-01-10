@@ -3,11 +3,15 @@ using UnityEngine;
 public class AssaultRifle : PlayerFirearm
 {
     public int AssaultRifleID = 1;
-    protected override AudioClip fireFX => (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
-    protected override float damage => 10f;
-    protected override float range => 30f;
-    protected override float rateOfFire => 0.12f;
-    protected override bool isAutomatic => true;
+
+    private void Awake()
+    {
+        fireFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
+        damage = 10f;
+        range = 30f;
+        isAutomatic = false;
+        rateOfFire = 0.12f;
+    }
 
     protected override void UpdateWeapon()
     {
