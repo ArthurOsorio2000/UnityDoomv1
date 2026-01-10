@@ -3,17 +3,11 @@ using UnityEngine;
 public class Handgun : PlayerFirearm
 {
     public int handgunID = 0;
-    [SerializeField] private AudioClip handgunFireFX;
-    [SerializeField] private float handgunDamage = 10f;
-    [SerializeField] private float handgunRange = 100f;
-    [SerializeField] private bool handgunIsAutomatic = false;
-    [SerializeField] private float handgunRateOfFire = 0.3f;
-
-    protected override AudioClip fireFX => handgunFireFX;
-    protected override float damage => handgunDamage;
-    protected override float range => handgunRange;
-    protected override bool isAutomatic => handgunIsAutomatic;
-    protected override float rateOfFire => handgunRateOfFire;
+    protected override AudioClip fireFX => (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
+    protected override float damage => 25f;
+    protected override float range => 100f;
+    protected override bool isAutomatic => false;
+    protected override float rateOfFire => 0.3f;
 
     protected override void UpdateWeapon()
     {

@@ -11,8 +11,9 @@ public abstract class PlayerFirearm : MonoBehaviour
     protected abstract bool isAutomatic {get;}
 
     //all the things that can stay the same/get inherited
-    [SerializeField] protected Camera playerCamera;
-    [SerializeField] protected InputManager inputManager;
+    protected Camera playerCamera;
+    protected InputManager inputManager;
+    protected AudioManager audioManager;
 
     protected abstract void UpdateWeapon();
 
@@ -21,6 +22,7 @@ public abstract class PlayerFirearm : MonoBehaviour
         //assign common components
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         inputManager = InputManager.Instance;
+        audioManager = AudioManager.Instance;
     }
 
     void OnEnable()
@@ -44,7 +46,7 @@ public abstract class PlayerFirearm : MonoBehaviour
     public virtual void Shoot(AudioClip fireFX, float damage, float range, float rateOfFire)
     {
         if (canFire){
-        AudioManager.Instance.PlaySoundEffect(fireFX, transform, 1f);
+        audioManager.PlaySoundEffect(fireFX, transform, 1f);
         RaycastHit hit;
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range))
         {

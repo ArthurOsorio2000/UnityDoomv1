@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 11113989}
   m_Layer: 0
   m_Name: Player Controller
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -489,12 +489,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Handgun
   playerCamera: {fileID: 0}
   inputManager: {fileID: 0}
-  handgunID: 1
-  handgunFireFX: {fileID: 8300000, guid: ef4608fb4d4bf3d4f9e98e21ef14d370, type: 3}
-  handgunDamage: 10
-  handgunRange: 100
-  handgunIsAutomatic: 0
-  handgunRateOfFire: 0.3
+  audioManager: {fileID: 0}
+  handgunID: 0
 --- !u!1 &316994365
 GameObject:
   m_ObjectHideFlags: 0
@@ -2156,12 +2152,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AssaultRifle
   playerCamera: {fileID: 0}
   inputManager: {fileID: 0}
-  AssaultRifleID: 2
-  assaultRifleFireFX: {fileID: 8300000, guid: ef4608fb4d4bf3d4f9e98e21ef14d370, type: 3}
-  assaultRifleDamage: 10
-  assaultRifleRange: 100
-  assaultRifleIsAutomatic: 1
-  assaultRifleRateOfFire: 0.12
+  audioManager: {fileID: 0}
+  AssaultRifleID: 1
 --- !u!1 &1925892301
 GameObject:
   m_ObjectHideFlags: 0
