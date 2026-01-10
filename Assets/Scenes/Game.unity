@@ -1863,6 +1863,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1649597583}
+  - component: {fileID: 1649597584}
   m_Layer: 0
   m_Name: Player Weapon Manager
   m_TagString: Untagged
@@ -1887,6 +1888,23 @@ Transform:
   - {fileID: 1816869584}
   m_Father: {fileID: 330585546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1649597584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1649597582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c45985985a6f6014fbc3aa3cdf41b1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
+  currentWeapon: 0
+  weapons:
+  - {fileID: 222108065}
+  - {fileID: 1816869583}
+  inputManager: {fileID: 0}
 --- !u!1 &1711462507
 GameObject:
   m_ObjectHideFlags: 0

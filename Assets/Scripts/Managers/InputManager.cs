@@ -68,11 +68,11 @@ public class InputManager : MonoBehaviour
         return playerControls.Player.Shoot.triggered;
     }
 
-    public bool EquipHandgun()
+    public bool SelectHandgun()
     {
         return playerControls.Player.EquipHandgun.triggered;
     }
-    public bool EquipAssaultRifle()
+    public bool SelectAssaultRifle()
     {
         return playerControls.Player.EquipAssaultRifle.triggered;
     }
