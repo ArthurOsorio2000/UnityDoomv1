@@ -54,7 +54,7 @@ public abstract class PlayerFirearm : MonoBehaviour
             Debug.Log(hit.transform.name);
 
             //
-            Target target = hit.transform.GetComponent<Target>();
+            HealthComponent target = hit.transform.GetComponent<HealthComponent>();
             if (target != null)
             {
                 target.TakeDamage(damage);
