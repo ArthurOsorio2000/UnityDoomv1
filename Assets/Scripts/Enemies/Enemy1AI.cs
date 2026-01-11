@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy1AI : MonoBehaviour
+public class Enemy1AI : BaseEnemyTemplate
 {
     //should I have this inherit off a target parent class that handles shots?
     //that would imply both enemies and damagable objects like explosive barrels
@@ -17,13 +17,11 @@ public class Enemy1AI : MonoBehaviour
     //do I have to look into colliders as well? for enemy wakeup and state change?
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    [SerializeField] private float health;
-    [SerializeField] private float speed;
-    [SerializeField] private float attackDamage;
     [SerializeField] private float attackRate;
-    void Start()
+
+    void Awake()
     {
-        
+        health = 200f;
     }
 
     // Update is called once per frame

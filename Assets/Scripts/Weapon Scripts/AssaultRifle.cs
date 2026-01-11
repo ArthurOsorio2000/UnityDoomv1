@@ -7,7 +7,7 @@ public class AssaultRifle : PlayerFirearm
     private void Awake()
     {
         fireFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
-        damage = 10f;
+        damage = 25f;
         range = 30f;
         isAutomatic = false;
         rateOfFire = 0.12f;

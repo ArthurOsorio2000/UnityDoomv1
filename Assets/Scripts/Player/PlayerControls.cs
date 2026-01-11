@@ -12,13 +12,14 @@ public class PlayerControls : MonoBehaviour
     private InputManager inputManager;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
-    public GameObject playerCamera;
+    public Transform playerCameraTransform;
 
 
     private void Start()
     {
         inputManager = InputManager.Instance;
         controller = GetComponent<CharacterController>();
+        playerCameraTransform = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
     }
 
 
@@ -44,7 +45,7 @@ public class PlayerControls : MonoBehaviour
         if (move != Vector3.zero){
             transform.forward = move;
         }
-        transform.rotation = Quaternion.Euler(0, playerCamera.transform.eulerAngles.y, 0);
+        transform.rotation = Quaternion.Euler(0, playerCameraTransform.eulerAngles.y, 0);
 
         //does this normalize a combination of vectors, like a diagonal input, to prevent non-uniform speeds in certain directions?
         //for the sake of doom, I'll leave the movement vector magnitude unclamped to mimic movement tech

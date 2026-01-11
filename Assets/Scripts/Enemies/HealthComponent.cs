@@ -12,12 +12,8 @@ public class HealthComponent : MonoBehaviour
     //how do you dynamically change the health value based on the script this is placed on?
     //for enemies with differing health pools, shall I force it to require a HealthComponent and it's relevant sized hitbox, then override
     //the health variable with the intended health, to be further overriden as a SerializeField in-editor?
-    [SerializeField] private float health = 50f;
+    [field: SerializeField] public float health {get; set;} = 50f;
 
-    void Start()
-    {
-        gameObject.SetActive(true);
-    }
     public void TakeDamage (float amount)
         {
             health -= amount;
