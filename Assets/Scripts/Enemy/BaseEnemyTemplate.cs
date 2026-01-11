@@ -30,7 +30,16 @@ public abstract class BaseEnemyTemplate : MonoBehaviour
     //create default behaviour script (like moving?) and stick it into update
     //
 
+    //prototype states:
+    //idle
+    //patrol
+
     //define each state of the machine
     //define the transitions between states
     //select the initial state
+    //idle state
+    //patrol/tracking state
+    //combat state
+    //option combat substates: flanking - pushing
+    //*optional if despawning* death state
 }
