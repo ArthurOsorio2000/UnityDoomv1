@@ -487,6 +487,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2659016972c90ca49a10066801694061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Handgun
+  fireFX: {fileID: 0}
+  damage: 0
+  range: 0
+  rateOfFire: 0
+  isAutomatic: 0
   handgunID: 0
 --- !u!1 &316994365
 GameObject:
@@ -2147,6 +2152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b512b8a3605c3442b3a609f354af067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AssaultRifle
+  fireFX: {fileID: 0}
+  damage: 0
+  range: 0
+  rateOfFire: 0
+  isAutomatic: 0
   AssaultRifleID: 1
 --- !u!1 &1925892301
 GameObject:
