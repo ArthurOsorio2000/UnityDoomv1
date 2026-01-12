@@ -11,13 +11,15 @@ public class Handgun : PlayerFirearm
         range = 100f;
         isAutomatic = false;
         rateOfFire = 0.3f;
+        bulletsPerShot = 1f;
+        spread = 2f;
     }
 
     protected override void UpdateWeapon()
     {
         if (inputManager.PlayerSingleShot())
         {
-            Shoot(fireFX, damage, range, rateOfFire);
+            Shoot(fireFX, damage, range, rateOfFire, spread);
         }
     }
 }

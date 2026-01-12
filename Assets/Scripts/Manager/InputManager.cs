@@ -78,4 +78,9 @@ public class InputManager : MonoBehaviour
     {
         return playerControls.Player.EquipAssaultRifle.triggered;
     }
+
+    public bool SelectShotgun()
+    {
+        return playerControls.Player.EquipShotgun.triggered;
+    }
 }

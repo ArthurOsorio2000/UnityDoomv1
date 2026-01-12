@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public abstract class PlayerFirearm : MonoBehaviour
@@ -8,6 +9,8 @@ public abstract class PlayerFirearm : MonoBehaviour
     [SerializeField] protected float damage;
     [SerializeField] protected float range;
     [SerializeField] protected float rateOfFire;
+    [SerializeField] protected float bulletsPerShot;
+    [SerializeField] protected float spread;
     [SerializeField] protected bool isAutomatic;
 
     //all the things that can stay the same/get inherited
@@ -43,10 +46,12 @@ public abstract class PlayerFirearm : MonoBehaviour
 
     //initialize variable for default firerate control function in shoot method
     protected bool canFire = true;
-    public virtual void Shoot(AudioClip fireFX, float damage, float range, float rateOfFire)
+    public virtual void Shoot(AudioClip fireFX, float damage, float range, float rateOfFire, float spread)
     {
         if (canFire){
         audioManager.PlaySoundEffect(fireFX, transform, 1f);
+        //randomize a quaternion euler angle within the angle bounds of spread and multiply playerCamera.transform.forward
+        //with randomly generated angle for spread
         RaycastHit hit;
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range))
         {

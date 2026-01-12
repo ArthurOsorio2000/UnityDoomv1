@@ -25,6 +25,8 @@ public class NewMonoBehaviourScript : MonoBehaviour
     {
         EquipHangun();
         EquipAssaultRifle();
+        EquipShotgun();
+        
     }
 
     //list of currently equipped weapons.
@@ -68,6 +70,14 @@ public class NewMonoBehaviourScript : MonoBehaviour
         if (inputManager.SelectAssaultRifle())
         {
             SwapWeapon(1);
+        }
+    }
+
+    void EquipShotgun()
+    {
+        if (inputManager.SelectShotgun())
+        {
+            SwapWeapon(2);
         }
     }
     

@@ -4,6 +4,8 @@ using System.Collections;
 
 public class EnemyPatrolState : EnemyBaseState
 {
+    //float patrolSpeed = 5;
+    
     //if enemy sees player, is alerted or shot, switch to combat state
     //else, randomly pathfind, then occasionally switch to idle state
     public override void EnterState(EnemyStateManager enemy)
@@ -27,4 +29,7 @@ public class EnemyPatrolState : EnemyBaseState
 
     //using recursion, make the enemy move randomly a random amount of times between
     //3-10
+
+    //pick a random direction on a vector 2 axis and a random amount of time
+    //move in that direction in correlation to patrol speed magnitude
 }

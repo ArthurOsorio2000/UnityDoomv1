@@ -136,6 +136,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EquipShotgun"",
+                    ""type"": ""Button"",
+                    ""id"": ""d2c6f03d-d4eb-408b-9444-f37615c9bed4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -235,6 +244,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""EquipAssaultRifle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ebe47cc-a4b5-4259-a9c6-a0416a04c464"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EquipShotgun"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -359,6 +379,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_EquipHandgun = m_Player.FindAction("EquipHandgun", throwIfNotFound: true);
         m_Player_EquipAssaultRifle = m_Player.FindAction("EquipAssaultRifle", throwIfNotFound: true);
+        m_Player_EquipShotgun = m_Player.FindAction("EquipShotgun", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_MovePointer = m_Menu.FindAction("MovePointer", throwIfNotFound: true);
@@ -449,6 +470,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_EquipHandgun;
     private readonly InputAction m_Player_EquipAssaultRifle;
+    private readonly InputAction m_Player_EquipShotgun;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -480,6 +502,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/EquipAssaultRifle".
         /// </summary>
         public InputAction @EquipAssaultRifle => m_Wrapper.m_Player_EquipAssaultRifle;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/EquipShotgun".
+        /// </summary>
+        public InputAction @EquipShotgun => m_Wrapper.m_Player_EquipShotgun;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -521,6 +547,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @EquipAssaultRifle.started += instance.OnEquipAssaultRifle;
             @EquipAssaultRifle.performed += instance.OnEquipAssaultRifle;
             @EquipAssaultRifle.canceled += instance.OnEquipAssaultRifle;
+            @EquipShotgun.started += instance.OnEquipShotgun;
+            @EquipShotgun.performed += instance.OnEquipShotgun;
+            @EquipShotgun.canceled += instance.OnEquipShotgun;
         }
 
         /// <summary>
@@ -547,6 +576,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @EquipAssaultRifle.started -= instance.OnEquipAssaultRifle;
             @EquipAssaultRifle.performed -= instance.OnEquipAssaultRifle;
             @EquipAssaultRifle.canceled -= instance.OnEquipAssaultRifle;
+            @EquipShotgun.started -= instance.OnEquipShotgun;
+            @EquipShotgun.performed -= instance.OnEquipShotgun;
+            @EquipShotgun.canceled -= instance.OnEquipShotgun;
         }
 
         /// <summary>
@@ -794,6 +826,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnEquipAssaultRifle(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "EquipShotgun" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnEquipShotgun(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Menu" which allows adding and removing callbacks.
