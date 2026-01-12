@@ -22,7 +22,7 @@ public class EnemyIdleState : EnemyBaseState
         //how to find out if character is getting shot, and interrupt their idle if shot?
         //if player is in line of site or damage is taken (health < than initial health)
         if(enemy.healthComponent.health < initialHealth){
-            Debug.LogFormat("Ow... my health is now {0} :(", enemy.healthComponent.health);
+            Debug.LogFormat("Ow... {0}'s health is now {1} :(", enemy.name, enemy.healthComponent.health);
             //temporary - will switch to combat state if damaged
             enemy.StopCoroutine(waitCoroutine);
             enemy.SwitchState(enemy.CombatState);
