@@ -1715,7 +1715,6 @@ GameObject:
   - component: {fileID: 1353749597}
   - component: {fileID: 1353749596}
   - component: {fileID: 1353749595}
-  - component: {fileID: 1353749599}
   - component: {fileID: 1353749598}
   m_Layer: 0
   m_Name: Enemy Prototype_1
@@ -1826,26 +1825,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1353749593}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6c3760eb1fa45247a58e4fdb54cff16, type: 3}
+  m_Script: {fileID: 11500000, guid: f2dd604f4a5abba44b606b1ea2cd37e7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy1AI
-  FX: {fileID: 0}
-  speed: 0
-  attackDamage: 0
-  attackRate: 0
---- !u!114 &1353749599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1353749593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f470153a7a2855943a317f5493e48847, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  <health>k__BackingField: 50
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
 --- !u!1 &1461696837
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,10 +20,10 @@ public class HealthComponent : MonoBehaviour
             if (health <= 0f)
             {
                 Die();
-            } 
+            }
         }
 
-    void Die()
+    public virtual void Die()
         {
             //gameObject.SetActive(false) is a good way to reuse stuff if you're going to use it again
             //(respawning enemies or reusing bullets)
@@ -31,6 +31,7 @@ public class HealthComponent : MonoBehaviour
             //it's like sending to graveyard vs exile lol
 
             //gameObject.SetActive(false);
+            Debug.LogFormat("{0} died", gameObject.name);
             Destroy(gameObject);
         }
     }
