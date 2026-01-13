@@ -6,11 +6,12 @@ using UnityEngine;
 public abstract class PlayerFirearm : MonoBehaviour
 {
     //all the things that need to be changed by the inheriting weapons
+    //note, changing these in editor doesn't change anything about the weapon - test why
     [SerializeField] protected AudioClip fireFX;
     [SerializeField] protected float damage;
     [SerializeField] protected float range;
     [SerializeField] protected float rateOfFire;
-    [SerializeField] protected float bulletsPerShot;
+    [SerializeField] protected int bulletsPerShot;
     //note all spread radius numbers need to be between 0 and 1, as the unit circle used to randomize
     //the spread has a maximum radius of 1
     [SerializeField] protected float spreadRadius;
@@ -45,23 +46,32 @@ public abstract class PlayerFirearm : MonoBehaviour
         UpdateWeapon();
     }
 
-    //default fire method
-    //create a coroutine to manage firerate
-    //figure out how to to use the isAutomatic bool to specify how the gun controls.
-    //should there be a single shot and an automatic shot method? or should the shoot method be changed per gun?
-
     //initialize variable for default firerate control function in shoot method
+    
+    //if player isn't moving, I can either remove spread or make it 0?
     protected bool canFire = true;
-    public virtual void Shoot(AudioClip fireFX, float damage, float range, float rateOfFire, float spreadRadius)
+    //learning optional parameter - adding a value makes it default, and omitting it lets you only have to add it for certain uses
+    public virtual void Shoot(AudioClip fireFX, float damage, float range, float spreadRadius, float rateOfFire, int bulletsPerShot = 1)
     {
         if (canFire){
         audioManager.PlaySoundEffect(fireFX, transform, 1f);
-        Vector3 shotOrigin = playerCamera.transform.position;
 
+        for(int i = 0; i < bulletsPerShot; i++){
+            FireBullet(damage, range, spreadRadius);
+        }
+
+        //weapon firerate
+        canFire = false;
+        StartCoroutine(FireDelay(rateOfFire));
+        }
+    }
+
+    protected void FireBullet(float damage, float range, float spreadRadius)
+    {
+        Vector3 shotOrigin = playerCamera.transform.position;
+        //designate spread
         Vector3 gunSpread = Random.insideUnitCircle * spreadRadius;
         gunSpread.z = 1;
-
-
         Vector3 shotDirection = (gunSpread - Vector3.zero).normalized;
         shotDirection = playerCamera.transform.rotation * shotDirection;
 
@@ -76,25 +86,24 @@ public abstract class PlayerFirearm : MonoBehaviour
             //for debugging
             Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
 
-            // lineRenderer =  GetComponent<LineRenderer>();
+            //for shot trails
+            // lineRenderer = GetComponent<LineRenderer>();
             // lineRenderer.SetPosition(0, ray.origin);
             // lineRenderer.SetPosition(1, hit.point);
 
             //print whatever the raycast hit to the debug log
             Debug.Log(hit.transform.name);
 
+            //on hit, deal damage to target
             HealthComponent target = hit.transform.GetComponent<HealthComponent>();
             if (target != null)
             {
                 target.TakeDamage(damage);
             }
+        //action if miss
         }else
         {
             Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
-        }
-
-        canFire = false;
-        StartCoroutine(FireDelay(rateOfFire));
         }
     }
 

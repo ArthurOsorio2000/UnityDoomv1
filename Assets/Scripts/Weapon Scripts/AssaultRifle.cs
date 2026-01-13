@@ -11,7 +11,6 @@ public class AssaultRifle : PlayerFirearm
         range = 30f;
         isAutomatic = false;
         rateOfFire = 0.12f;
-        bulletsPerShot = 1f;
         spreadRadius = 0.05f;
     }
 
@@ -19,7 +18,7 @@ public class AssaultRifle : PlayerFirearm
     {
         if (inputManager.PlayerHoldShot())
         {
-            Shoot(fireFX, damage, range, rateOfFire, spreadRadius);
+            Shoot(fireFX, damage, range, spreadRadius ,rateOfFire);
         }
     }
 }

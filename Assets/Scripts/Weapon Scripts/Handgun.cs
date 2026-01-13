@@ -3,6 +3,7 @@ using UnityEngine;
 public class Handgun : PlayerFirearm
 {
     public int handgunID = 0;
+    
     private void Awake()
     {
         
@@ -11,7 +12,6 @@ public class Handgun : PlayerFirearm
         range = 100f;
         isAutomatic = false;
         rateOfFire = 0.3f;
-        bulletsPerShot = 1f;
         spreadRadius = 0.07f;
     }
 
@@ -19,7 +19,7 @@ public class Handgun : PlayerFirearm
     {
         if (inputManager.PlayerSingleShot())
         {
-            Shoot(fireFX, damage, range, rateOfFire, spreadRadius);
+            Shoot(fireFX, damage, range, spreadRadius ,rateOfFire);
         }
     }
 }

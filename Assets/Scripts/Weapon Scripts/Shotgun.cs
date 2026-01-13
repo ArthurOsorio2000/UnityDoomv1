@@ -11,7 +11,7 @@ public class Shotgun : PlayerFirearm
         range = 12f;
         isAutomatic = false;
         rateOfFire = 1.05f;
-        bulletsPerShot = 5;
+        bulletsPerShot = 12;
         spreadRadius = 0.2f;
     }
 
@@ -19,7 +19,7 @@ public class Shotgun : PlayerFirearm
     {
         if (inputManager.PlayerSingleShot())
         {
-            Shoot(fireFX, damage, range, rateOfFire, spreadRadius);
+            Shoot(fireFX, damage, range, spreadRadius ,rateOfFire, bulletsPerShot);
         }
     }
 
