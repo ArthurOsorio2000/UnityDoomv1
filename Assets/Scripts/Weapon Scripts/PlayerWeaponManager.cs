@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
+    protected Camera playerCamera;
     [SerializeField] private int currentWeapon;
 
     //note: this holds all weapons. if you want a fixed spot for them, import them and sort them based on an id?
@@ -10,6 +11,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     [SerializeField] private InputManager inputManager;
     void Start()
     {
+        playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         foreach (GameObject weapon in weapons)
         {
             weapon.SetActive(false);
@@ -23,6 +25,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.rotation = playerCamera.transform.rotation;
         EquipHangun();
         EquipAssaultRifle();
         EquipShotgun();

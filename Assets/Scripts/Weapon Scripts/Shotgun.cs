@@ -12,19 +12,19 @@ public class Shotgun : PlayerFirearm
         isAutomatic = false;
         rateOfFire = 1.05f;
         bulletsPerShot = 5;
-        spread = 5;
+        spreadRadius = 0.2f;
     }
 
     protected override void UpdateWeapon()
     {
         if (inputManager.PlayerSingleShot())
         {
-            Shoot(fireFX, damage, range, rateOfFire, spread);
+            Shoot(fireFX, damage, range, rateOfFire, spreadRadius);
         }
     }
 
-    public override void Shoot(AudioClip fireFX, float damage, float range, float rateOfFire, float spread)
-    {
+    // public override void Shoot(AudioClip fireFX, float damage, float range, float rateOfFire, float spread)
+    // {
         
-    }
+    // }
 }

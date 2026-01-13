@@ -522,6 +522,8 @@ MonoBehaviour:
   damage: 0
   range: 0
   rateOfFire: 0
+  bulletsPerShot: 0
+  spread: 0
   isAutomatic: 0
   handgunID: 0
 --- !u!1 &247962634
@@ -1031,7 +1033,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1649597583}
+  - {fileID: 494985649}
   m_Father: {fileID: 1133451730}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
@@ -1393,7 +1395,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 541378028}
-  m_Father: {fileID: 1133451730}
+  m_Father: {fileID: 330585546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2079,7 +2081,7 @@ GameObject:
   - component: {fileID: 1133451730}
   - component: {fileID: 1133451731}
   m_Layer: 0
-  m_Name: Player Camera (tracker)
+  m_Name: Player POV Tracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2099,7 +2101,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 330585546}
-  - {fileID: 494985649}
+  - {fileID: 1649597583}
   m_Father: {fileID: 1115231874}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1133451731
@@ -2497,14 +2499,14 @@ Transform:
   m_GameObject: {fileID: 1649597582}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.08, z: 0.19}
+  m_LocalPosition: {x: 0, y: -0.08000004, z: 0.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 222108066}
   - {fileID: 1816869584}
   - {fileID: 1928105971}
-  m_Father: {fileID: 330585546}
+  m_Father: {fileID: 1133451730}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1649597584
 MonoBehaviour:
@@ -2777,6 +2779,8 @@ MonoBehaviour:
   damage: 0
   range: 0
   rateOfFire: 0
+  bulletsPerShot: 0
+  spread: 0
   isAutomatic: 0
   AssaultRifleID: 1
 --- !u!1 &1925892301
@@ -2872,6 +2876,8 @@ MonoBehaviour:
   damage: 0
   range: 0
   rateOfFire: 0
+  bulletsPerShot: 0
+  spread: 0
   isAutomatic: 0
   shotgunID: 2
 --- !u!1 &2095862873

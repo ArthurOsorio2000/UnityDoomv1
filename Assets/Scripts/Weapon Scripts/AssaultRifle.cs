@@ -12,14 +12,14 @@ public class AssaultRifle : PlayerFirearm
         isAutomatic = false;
         rateOfFire = 0.12f;
         bulletsPerShot = 1f;
-        spread = 0.5f;
+        spreadRadius = 0.05f;
     }
 
     protected override void UpdateWeapon()
     {
         if (inputManager.PlayerHoldShot())
         {
-            Shoot(fireFX, damage, range, rateOfFire, spread);
+            Shoot(fireFX, damage, range, rateOfFire, spreadRadius);
         }
     }
 }
