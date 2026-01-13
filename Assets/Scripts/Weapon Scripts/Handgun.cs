@@ -10,7 +10,6 @@ public class Handgun : PlayerFirearm
         fireFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
         damage = 50f;
         range = 100f;
-        isAutomatic = false;
         rateOfFire = 0.3f;
         spreadRadius = 0.07f;
     }

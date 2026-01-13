@@ -843,7 +843,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2dd604f4a5abba44b606b1ea2cd37e7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
+  m_EditorClassIdentifier: Assembly-CSharp::ZombieManStateManager
   FX: {fileID: 0}
   speed: 0
   attackDamage: 0
@@ -2254,7 +2254,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2dd604f4a5abba44b606b1ea2cd37e7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
+  m_EditorClassIdentifier: Assembly-CSharp::ZombieManStateManager
   FX: {fileID: 0}
   speed: 0
   attackDamage: 0

@@ -38,13 +38,13 @@ public class PlayerControls : MonoBehaviour
         Vector2 moveInput = inputManager.GetPlayerMovement();
         //look input doesn't work because it's a delta pass through value - it only applies during movement.
         //I need to find the value of something that actually turns during camera movement and copy that instead.
-        //controller.transform.rotation = quaternion.Euler(0, cameraRotation.transform.rotation.y, 0);
 
         //note to self - this is the magnitude of a movement vector per frame, not the direction
         Vector3 move = new Vector3(moveInput.x, 0, moveInput.y);
         if (move != Vector3.zero){
             transform.forward = move;
         }
+        //rotate player to change forward vector based on player camera
         transform.rotation = Quaternion.Euler(0, playerCameraTransform.eulerAngles.y, 0);
 
         //does this normalize a combination of vectors, like a diagonal input, to prevent non-uniform speeds in certain directions?
@@ -55,6 +55,7 @@ public class PlayerControls : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
 
         // Move
+        //Vector3.up * playerVelocity.y adds gravity
         Vector3 finalMove = move * playerSpeed + Vector3.up * playerVelocity.y;
         controller.Move(transform.rotation * finalMove * Time.deltaTime);
     }

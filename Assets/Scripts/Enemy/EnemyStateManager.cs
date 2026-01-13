@@ -15,7 +15,7 @@ public class EnemyStateManager : MonoBehaviour
     public EnemyCombatState CombatState = new EnemyCombatState();
 
     //Enemy Attributes - these should all be set in the spawnstate?
-    public HealthComponent healthComponent {get; set;}
+    public HealthComponent healthComponent;
     public AudioClip FX; //temporary audioclip location
     public float speed;
     public float attackDamage;
@@ -28,13 +28,13 @@ public class EnemyStateManager : MonoBehaviour
 
     void Start()
     {
-        currentState = SpawnState;
+        currentState = PatrolState;
         currentState.EnterState(this);
     }
 
     // Update is called once per frame
     //if health = 0, die?
-    //how do I update all states that this enemy is getting shot?
+    //how do I update all states that this Enemy is getting shot?
     void Update()
     {
         currentState.UpdateState(this);

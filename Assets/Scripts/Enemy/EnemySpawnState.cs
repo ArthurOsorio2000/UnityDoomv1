@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemySpawnState : EnemyBaseState
 {
-    //first, make the enemy move randomly (pathfind?).
+    //first, make the Enemy move randomly (pathfind?).
     //then, make the enemy take damage
     //then, give the enemy states?
     //or, first, look into state control?

@@ -9,7 +9,6 @@ public class Shotgun : PlayerFirearm
         fireFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomShotgun", typeof(AudioClip));
         damage = 75f;
         range = 12f;
-        isAutomatic = false;
         rateOfFire = 1.05f;
         bulletsPerShot = 12;
         spreadRadius = 0.2f;

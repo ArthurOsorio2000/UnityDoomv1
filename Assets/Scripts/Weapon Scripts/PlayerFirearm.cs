@@ -15,7 +15,6 @@ public abstract class PlayerFirearm : MonoBehaviour
     //note all spread radius numbers need to be between 0 and 1, as the unit circle used to randomize
     //the spread has a maximum radius of 1
     [SerializeField] protected float spreadRadius;
-    [SerializeField] protected bool isAutomatic;
 
     //all the things that can stay the same/get inherited
     protected Camera playerCamera;
@@ -54,15 +53,15 @@ public abstract class PlayerFirearm : MonoBehaviour
     public virtual void Shoot(AudioClip fireFX, float damage, float range, float spreadRadius, float rateOfFire, int bulletsPerShot = 1)
     {
         if (canFire){
-        audioManager.PlaySoundEffect(fireFX, transform, 1f);
+            audioManager.PlaySoundEffect(fireFX, transform, 1f);
 
-        for(int i = 0; i < bulletsPerShot; i++){
-            FireBullet(damage, range, spreadRadius);
-        }
+            for(int i = 0; i < bulletsPerShot; i++){
+                FireBullet(damage, range, spreadRadius);
+            }
 
-        //weapon firerate
-        canFire = false;
-        StartCoroutine(FireDelay(rateOfFire));
+            //weapon firerate
+            canFire = false;
+            StartCoroutine(FireDelay(rateOfFire));
         }
     }
 

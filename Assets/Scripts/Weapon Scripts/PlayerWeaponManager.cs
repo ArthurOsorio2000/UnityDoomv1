@@ -83,7 +83,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
             SwapWeapon(2);
         }
     }
-    
 
     void SwapWeapon(int selectedWeapon)
     {
