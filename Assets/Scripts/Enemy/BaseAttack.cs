@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BaseAttack : MonoBehaviour
 {
+    //range of attack
+    //target of attack
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,7 +16,7 @@ public class BaseAttack : MonoBehaviour
         
     }
 
-    void DoAttack()
+    public virtual void DoAttack()
     {
         
     }

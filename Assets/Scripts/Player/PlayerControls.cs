@@ -14,7 +14,7 @@ public class PlayerControls : MonoBehaviour
             return _instance;
         }
     }
-    [SerializeField] private float playerSpeed = 5.0f;
+    [SerializeField] private float playerSpeed = 10f;
     [SerializeField] private float gravityValue = -9.81f;
 
     private CharacterController controller;

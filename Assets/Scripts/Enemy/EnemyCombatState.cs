@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
+using UnityEditor.ShaderGraph.Internal;
+
 
 public class EnemyCombatState : EnemyBaseState
 {
@@ -10,16 +12,18 @@ public class EnemyCombatState : EnemyBaseState
     //when entering combat state, should I have a raycast towards the player? or should I track player location?
     //if tracking player location, then breaking line of sight will not prevent the enemy from attacking.
     //when entering combat - raycast towards player location. If hitting player - track player location?
-    [SerializeField] BaseAttack attack;
-    [SerializeField] float combatSpeed = 4;
-    //when enemy enters combat state - it can be assumed that something has triggered it to detect the player.
-    //Knowing this, we can skip checking for the player location and simply record their location.
-    //if I want to implement breaking eyesight, keep a raycast towards the player. if the raycast hit is broken
-    //for a sufficient amount of time, exit combat state and enter patrol or hunt state.
+
+    //hardcoded attacks for zombieman:
+    float combatSpeed = 4;
+    float attackRange = 20f;
+    float attackDamage = 20f;
+    bool canFire = true;
+
     private GameObject[] playerList;
     private GameObject playerPosition;
     public override void EnterState(EnemyStateManager enemy)
     {
+        //designate current player position
         playerList = GameObject.FindGameObjectsWithTag("Player");
         if (playerList != null){
            playerPosition = playerList[0];
@@ -27,19 +31,36 @@ public class EnemyCombatState : EnemyBaseState
         //enemy.SwitchState(enemy.PatrolState);
     }
 
+
     public override void UpdateState(EnemyStateManager enemy)
     {
-        //rudimentary combat code
-        ChasePlayer(enemy);
+        Shoot(enemy, enemy.FX, attackDamage, attackRange, 5f, 0.2f, 1);
     }
 
-    //how am I going to program player tracking?
-    /**let's assume the enemy has sight of the player - this can be tested by placing an object that blocks sight from one enemy
-    but not the other. Test this by setting enemy state to Combatstate on spawn in the state manager.
-
-    hit damage - make enemy falter upon taking damage so that it doesn't ignore damage
+    /**
+    how to make this shoot at player?
+    find the location of the player. fire a raycast towards the player location - if hit and returns player, this means it can see the player
     **/
 
+    public void lookAtPlayer()
+    {
+        //fire raycast towards player
+        //playerPosition
+    }
+
+    /**
+    Now that you are looking at the player, do attack towards the player. In Zombieman's case, wait a little bit, then fire rays similar to
+    the pistol towards the player.
+    **/
+
+    public void attackPlayer()
+    {
+        
+    }
+
+    /**
+    ensure that when following the player, take steps towards them until the player is in range of your weapon.
+    **/
     public void ChasePlayer(EnemyStateManager enemy)
     {
         if(playerPosition != null)
@@ -58,6 +79,68 @@ public class EnemyCombatState : EnemyBaseState
         //while aiming - play an animation to make the player aware of what the enemy is doing
         //Also work out how boundaries work - when a player crosses or activates a specific event boundary - how do you toggle states for the enemy?
         //to simulate ambushes or hiding for player.
+    }
+
+    public virtual void Shoot(EnemyStateManager enemy, AudioClip fireFX, float damage, float range, float spreadRadius, float rateOfFire, int bulletsPerShot = 1)
+    {
+        if (canFire){
+            enemy.audioManager.PlaySoundEffect(fireFX, enemy.transform, 1f);
+
+            for(int i = 0; i < bulletsPerShot; i++){
+                FireBullet(enemy, damage, range, spreadRadius);
+            }
+
+            //weapon firerate
+            canFire = false;
+            enemy.StartCoroutine(FireDelay(rateOfFire));
+        }
+    }
+
+    protected void FireBullet(EnemyStateManager enemy, float damage, float range, float spreadRadius)
+    {
+        Vector3 shotOrigin = enemy.transform.position;
+        //designate spread
+        Vector3 gunSpread = Random.insideUnitCircle * spreadRadius;
+        gunSpread.z = 1;
+        Vector3 shotDirection = (gunSpread - Vector3.zero).normalized;
+        shotDirection = enemy.transform.rotation * shotDirection;
+
+        //for future debugging = maybe instantialise the transform position so it can be reflected to both the ray debugger and
+        //the physics raycast - just make sure those values are the same
+        RaycastHit hit;
+        Ray ray = new Ray(shotOrigin, shotDirection);
+
+        //check for hit
+        if (Physics.Raycast(shotOrigin, shotDirection, out hit, range))
+        {
+            //for debugging
+            Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
+
+            //for shot trails
+            // lineRenderer = GetComponent<LineRenderer>();
+            // lineRenderer.SetPosition(0, ray.origin);
+            // lineRenderer.SetPosition(1, hit.point);
+
+            //print whatever the raycast hit to the debug log
+            Debug.Log(hit.transform.name);
+
+            //on hit, deal damage to target
+            HealthComponent target = hit.transform.GetComponent<HealthComponent>();
+            if (target != null)
+            {
+                target.TakeDamage(damage);
+            }
+        //action if miss
+        }else
+        {
+            Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
+        }
+    }
+
+    IEnumerator FireDelay(float rateOfFire)
+    {
+        yield return new WaitForSeconds(rateOfFire);
+        canFire = true;
     }
 
 }

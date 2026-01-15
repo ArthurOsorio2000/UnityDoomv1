@@ -32,6 +32,8 @@ public class HealthComponent : MonoBehaviour
 
             //gameObject.SetActive(false);
             Debug.LogFormat("{0} died", gameObject.name);
+            //since the player has a health component, this will destroy the player object. what problems will
+            //this cause
             Destroy(gameObject);
         }
     }

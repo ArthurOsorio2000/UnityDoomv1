@@ -14,7 +14,7 @@ public class ZombieManAttack : BaseAttack
         
     }
 
-    public void DoAttack()
+    public override void DoAttack()
     {
         
     }

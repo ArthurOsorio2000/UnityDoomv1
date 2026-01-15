@@ -43,12 +43,12 @@ public class EnemyPatrolState : EnemyBaseState
         float secondLook = firstLook * 2;        
 
         //if enemy is shot at - stop these coroutines, then stop the partrol look coroutine in Enterstate and shift to combatstate
+        //can you nest these coroutines in itself recursively?
         enemy.StartCoroutine(SweepArea(enemy, firstLook, lookRadius));
         yield return new WaitForSeconds(lookTime);
         enemy.StartCoroutine(SweepArea(enemy, secondLook, -lookRadius * 2));
         yield return new WaitForSeconds(lookTime);
         enemy.StartCoroutine(SweepArea(enemy, firstLook, lookRadius));
-
     }
 
     IEnumerator SweepArea(EnemyStateManager enemy, float turnLength = 3f, float lookRadius = 179f, float lookLength = 1)
@@ -81,37 +81,6 @@ public class EnemyPatrolState : EnemyBaseState
 
         //float step = patrolSpeed * Time.deltaTime;
         //enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, new Vector3(10, 0, 0), step); //this only occurs once a frame - should movement be in update?
-        enemy.transform.Translate(enemy.transform.rotation * moveDirection * Time.deltaTime);
+        enemy.transform.Translate(patrolSpeed * moveDirection * Time.deltaTime);
     }
-
-    //patrolling method:
-    /**
-    to make this follow a recursive method - pass a number into a function denoting
-    the amount of times you want the enemy to move. each time the method is called,
-    reduce the number by 1 and stop recursing when the number is equal to 0;
-    inside the method:
-    randomize this a number of times between 3 and 10:
-        use this method:
-        Vector2 gunSpread = Random.insideUnitCircle * spreadRadius;
-            gunSpread.z = 1;
-            Vector2 shotDirection = (gunSpread - Vector3.zero).normalized;
-            shotDirection = playerCamera.transform.rotation * shotDirection;
-
-        to find a random vector.
-        find a random magnitude to multiply the distance by
-        move in that direction
-        
-        move in that direction by plugging it kinda into this:
-        controller.Move(transform.rotation * finalMove * Time.deltaTime);
-
-
-    **/
-    //using recursion, make the enemy move randomly a random amount of times between
-    //3-10
-
-    //pick a random direction on a vector 2 axis and a random amount of time
-    //move in that direction in correlation to patrol speed magnitude
-
-    //make a look function. inbetween patrolling, look around for both the player and
-    // it's possible pathfinding directions?
 }

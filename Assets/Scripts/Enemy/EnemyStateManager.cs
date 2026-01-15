@@ -16,6 +16,7 @@ public class EnemyStateManager : MonoBehaviour
 
     //Enemy Attributes - these should all be set in the spawnstate?
     public HealthComponent healthComponent;
+    public AudioManager audioManager;
     public AudioClip FX; //temporary audioclip location
     public float speed;
     public float attackDamage;
@@ -24,13 +25,18 @@ public class EnemyStateManager : MonoBehaviour
     {
         //assign value to imported Components
         healthComponent = GetComponent<HealthComponent>();
+        audioManager = AudioManager.Instance;
     }
 
+    //like components for each enemy type should be instantiated here,
+    //but values should be assigned in a state so different enemies can set their own health
     void Start()
     {
         //for debug - set current state to desired debug state
         currentState = SpawnState;
         currentState.EnterState(this);
+        FX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
+
     }
 
     // Update is called once per frame
@@ -39,11 +45,15 @@ public class EnemyStateManager : MonoBehaviour
     void Update()
     {
         currentState.UpdateState(this);
-        if(healthComponent.health == 0)
+        //this doesn't work as healthcomponent destroys this object first prior to deathstate alert
+        if(healthComponent.health <= 0)
         {
             Debug.Log("deathstate reached");
             //currentState = DeadState;
         }
+
+        //should this constantly be polling as to whether the enemy is alerted to the player? - then
+        //switch to combat state unless already in combat state?
     }
 
     public void SwitchState(EnemyBaseState state)
