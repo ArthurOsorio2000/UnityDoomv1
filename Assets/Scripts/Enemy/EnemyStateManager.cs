@@ -50,4 +50,6 @@ public class EnemyStateManager : MonoBehaviour
         currentState = state;
         state.EnterState(this);
     }
+
+    //should the look function be here, so that enemies in idle and combat state can look around as well?
 }
