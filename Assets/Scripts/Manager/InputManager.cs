@@ -15,12 +15,12 @@ public class InputManager : MonoBehaviour
     void Awake()
     {
         playerControls = new InputSystem_Actions();
-        SingletonCheck();
+        InputManagerSingletonCheck();
         DontDestroyOnLoad(this);
     }
 
     //ensure there is one and only one instance of this class
-    void SingletonCheck()
+    void InputManagerSingletonCheck()
     {
         if(_instance != null && _instance != this)
         {

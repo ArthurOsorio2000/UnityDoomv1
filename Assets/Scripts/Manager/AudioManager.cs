@@ -14,10 +14,10 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        SingletonCheck();
+        AudioManagerSingletonCheck();
     }
 
-    void SingletonCheck()
+    void AudioManagerSingletonCheck()
     {
         if(_instance != null && _instance != this)
         {

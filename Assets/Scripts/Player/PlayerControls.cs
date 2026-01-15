@@ -5,6 +5,15 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControls : MonoBehaviour
 {
+    //should playercontrols be a singleton?
+    private static PlayerControls _instance;
+    public static PlayerControls Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
     [SerializeField] private float playerSpeed = 5.0f;
     [SerializeField] private float gravityValue = -9.81f;
 
@@ -17,11 +26,26 @@ public class PlayerControls : MonoBehaviour
 
     private void Start()
     {
+        PlayerControlsSingletonCheck();
         inputManager = InputManager.Instance;
         controller = GetComponent<CharacterController>();
         playerCameraTransform = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
     }
 
+    void PlayerControlsSingletonCheck()
+    {
+        if(_instance != null && _instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
+
+    //how do you handle player movement going up and down inclines
 
     void Update()
     {

@@ -28,7 +28,8 @@ public class EnemyStateManager : MonoBehaviour
 
     void Start()
     {
-        currentState = PatrolState;
+        //for debug - set current state to desired debug state
+        currentState = SpawnState;
         currentState.EnterState(this);
     }
 

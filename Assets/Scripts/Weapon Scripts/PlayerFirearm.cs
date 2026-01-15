@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class PlayerFirearm : MonoBehaviour
 {
+    //get the spread of the crosshair and import it across to the reticle so that the spread can affect
+    //the radius of the crosshair and dynamically changes based on player movement, firing or playerdamage?
     //all the things that need to be changed by the inheriting weapons
     //note, changing these in editor doesn't change anything about the weapon - test why
     [SerializeField] protected AudioClip fireFX;

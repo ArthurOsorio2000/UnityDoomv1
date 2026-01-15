@@ -130,6 +130,8 @@ GameObject:
   - component: {fileID: 11113988}
   - component: {fileID: 11113984}
   - component: {fileID: 11113989}
+  - component: {fileID: 11113991}
+  - component: {fileID: 11113990}
   m_Layer: 0
   m_Name: Player Controller
   m_TagString: Player
@@ -149,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b3d5b65027c4b24f9efcae8e9a1e352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControls
-  playerSpeed: 10
-  gravityValue: -9.81
+  playerSpeed: 5
+  gravityValue: 0
   playerCameraTransform: {fileID: 0}
 --- !u!4 &11113988
 Transform:
@@ -193,6 +195,33 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &11113990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11113983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e8f1d814b2fb046af663605cf92f77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  playerHealthComponent: {fileID: 0}
+  playerControls: {fileID: 0}
+--- !u!114 &11113991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11113983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f470153a7a2855943a317f5493e48847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
+  <health>k__BackingField: 50
 --- !u!1 &71181019
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,6 +873,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2dd604f4a5abba44b606b1ea2cd37e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
+  healthComponent: {fileID: 0}
   FX: {fileID: 0}
   speed: 0
   attackDamage: 0
@@ -2061,7 +2091,7 @@ Transform:
   m_GameObject: {fileID: 1115231873}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2255,6 +2285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2dd604f4a5abba44b606b1ea2cd37e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
+  healthComponent: {fileID: 0}
   FX: {fileID: 0}
   speed: 0
   attackDamage: 0
