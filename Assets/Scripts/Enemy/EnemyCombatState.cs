@@ -31,17 +31,15 @@ public class EnemyCombatState : EnemyBaseState
         //enemy.SwitchState(enemy.PatrolState);
     }
 
-
     public override void UpdateState(EnemyStateManager enemy)
     {
-        Shoot(enemy, enemy.FX, attackDamage, attackRange, 5f, 0.2f, 1);
+        //Shoot(enemy, enemy.FX, attackDamage, attackRange, 5f, 0.2f, 1);
     }
 
     /**
     how to make this shoot at player?
     find the location of the player. fire a raycast towards the player location - if hit and returns player, this means it can see the player
     **/
-
     public void lookAtPlayer()
     {
         //fire raycast towards player

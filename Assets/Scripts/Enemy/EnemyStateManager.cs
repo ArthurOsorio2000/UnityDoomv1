@@ -1,18 +1,33 @@
 using UnityEngine;
+using System.Collections;
+
 
 [RequireComponent(typeof(HealthComponent))]
 public class EnemyStateManager : MonoBehaviour
 {
+
+
+    //add thing on top
+    //literally just cut everything down to one class
+    EnemyBaseState currentState;
+    
+    //create a list of states - maybe a dictionary with numbers being a key and a string of the state being a value?
+
+    //in update - constantly keep polling a statemachine switch to keep track of the current state
+    //eg if in combat state run the combat state method in update
+    //if in patrol state run the patrol state method in update
+    
+
     //states
     //note to self - problem: these states means that for each prefab that spawns with this state manager,
     //each of these spawn states will also be created alongside each state managed gameobject at runtime.
     //singleton-ing doesn't work as the classes aren't monobehaviour and cannot be destroyed on call.
     //there might be a way to only call one existing script for each one, but I'm not sure yet.
-    EnemyBaseState currentState;
-    public EnemySpawnState SpawnState = new EnemySpawnState();
-    public EnemyIdleState IdleState = new EnemyIdleState();
-    public EnemyPatrolState PatrolState = new EnemyPatrolState();
-    public EnemyCombatState CombatState = new EnemyCombatState();
+
+    // public EnemySpawnState SpawnState = new EnemySpawnState();
+    // public EnemyIdleState IdleState = new EnemyIdleState();
+    // public EnemyPatrolState PatrolState = new EnemyPatrolState();
+    // public EnemyCombatState CombatState = new EnemyCombatState();
 
     //Enemy Attributes - these should all be set in the spawnstate?
     public HealthComponent healthComponent;
@@ -33,7 +48,7 @@ public class EnemyStateManager : MonoBehaviour
     void Start()
     {
         //for debug - set current state to desired debug state
-        currentState = SpawnState;
+        //currentState = SpawnState;
         currentState.EnterState(this);
         FX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
 
@@ -60,6 +75,21 @@ public class EnemyStateManager : MonoBehaviour
     {
         currentState = state;
         state.EnterState(this);
+    }
+
+    public void PatrolState()
+    {
+        
+    }
+
+    private void CombatState()
+    {
+        
+    }
+
+    private void IdleState()
+    {
+        
     }
 
     //should the look function be here, so that enemies in idle and combat state can look around as well?

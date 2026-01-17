@@ -14,7 +14,6 @@ public abstract class EnemyBaseState
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     //create default behaviour script (like moving?) and stick it into update
-    //
 
     //prototype states:
     //idle

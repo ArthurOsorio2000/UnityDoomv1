@@ -14,8 +14,7 @@ public class EnemySpawnState : EnemyBaseState
     {
         Debug.LogFormat("{0} spawn state", enemy);
         Debug.Log("set this enemy's health to 200s");
-        enemy.healthComponent.health = spawnHealth;
-        enemy.SwitchState(enemy.IdleState);
+        //enemy.SwitchState(enemy.IdleState);
     }
 
     public override void UpdateState(EnemyStateManager enemy)
