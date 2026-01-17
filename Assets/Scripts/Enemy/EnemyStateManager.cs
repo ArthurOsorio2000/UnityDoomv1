@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 [RequireComponent(typeof(HealthComponent))]
@@ -9,20 +10,14 @@ public class EnemyStateManager : MonoBehaviour
 
     //add thing on top
     //literally just cut everything down to one class
-    EnemyBaseState currentState;
+    [SerializeField] private int currentState;
     
     //create a list of states - maybe a dictionary with numbers being a key and a string of the state being a value?
 
     //in update - constantly keep polling a statemachine switch to keep track of the current state
     //eg if in combat state run the combat state method in update
     //if in patrol state run the patrol state method in update
-    
-
-    //states
-    //note to self - problem: these states means that for each prefab that spawns with this state manager,
-    //each of these spawn states will also be created alongside each state managed gameobject at runtime.
-    //singleton-ing doesn't work as the classes aren't monobehaviour and cannot be destroyed on call.
-    //there might be a way to only call one existing script for each one, but I'm not sure yet.
+    Dictionary<int, string> states = new Dictionary<int, string>();
 
     // public EnemySpawnState SpawnState = new EnemySpawnState();
     // public EnemyIdleState IdleState = new EnemyIdleState();
@@ -30,66 +25,83 @@ public class EnemyStateManager : MonoBehaviour
     // public EnemyCombatState CombatState = new EnemyCombatState();
 
     //Enemy Attributes - these should all be set in the spawnstate?
-    public HealthComponent healthComponent;
-    public AudioManager audioManager;
-    public AudioClip FX; //temporary audioclip location
-    public float speed;
-    public float attackDamage;
+    private HealthComponent healthComponent;
+    private AudioManager audioManager;
+    [SerializeField] private AudioClip enemyWeaponFX;
+    [SerializeField] private float enemySpeed = 5f;
+    [SerializeField] private float enemyHealth = 200f;
+    [SerializeField] private float enemyAtkDamage = 50f;
 
     void Awake()
     {
-        //assign value to imported Components
-        healthComponent = GetComponent<HealthComponent>();
-        audioManager = AudioManager.Instance;
+        states.Add(1, "Idle");
+        states.Add(2, "Patrol");
+        states.Add(3, "Combat");
     }
 
     //like components for each enemy type should be instantiated here,
     //but values should be assigned in a state so different enemies can set their own health
     void Start()
     {
-        //for debug - set current state to desired debug state
-        //currentState = SpawnState;
-        currentState.EnterState(this);
-        FX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
+        //assign values to external Components
+        healthComponent = GetComponent<HealthComponent>();
+        healthComponent.health = enemyHealth;
+        audioManager = AudioManager.Instance;
+
+        currentState = 1;
+
+        enemyWeaponFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
 
     }
 
-    // Update is called once per frame
-    //if health = 0, die?
-    //how do I update all states that this Enemy is getting shot?
     void Update()
     {
-        currentState.UpdateState(this);
-        //this doesn't work as healthcomponent destroys this object first prior to deathstate alert
-        if(healthComponent.health <= 0)
+        //keep in mind this is polling every frame. once you start the game, this is playing a method every single time
+        //maybe start a coroutine with a flag instead?
+        switch (states[currentState])
         {
-            Debug.Log("deathstate reached");
-            //currentState = DeadState;
+            case "Idle":
+                while(states[currentState] == "Idle"){
+                    IdleState();
+                }
+                break;
+            case "Patrol":
+                while(states[currentState] == "Patrol"){
+                    PatrolState();
+                }
+                break;
+            case "Combat":
+                while(states[currentState] == "Combat"){
+                    CombatState();
+                }
+                break;
+            default:
+            break;
         }
-
-        //should this constantly be polling as to whether the enemy is alerted to the player? - then
-        //switch to combat state unless already in combat state?
     }
 
-    public void SwitchState(EnemyBaseState state)
+    public void SwitchState()
     {
-        currentState = state;
-        state.EnterState(this);
+        
     }
 
     public void PatrolState()
     {
-        
+        Debug.Log("in patrol state");
     }
 
     private void CombatState()
     {
-        
+        bool shot = false;
+        while (!shot){
+            audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
+            shot = true;
+        }
     }
 
     private void IdleState()
     {
-        
+        Debug.Log("in Idle state");
     }
 
     //should the look function be here, so that enemies in idle and combat state can look around as well?
