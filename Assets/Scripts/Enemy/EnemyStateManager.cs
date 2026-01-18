@@ -61,19 +61,13 @@ public class EnemyStateManager : MonoBehaviour
         switch (states[currentState])
         {
             case "Idle":
-                while(states[currentState] == "Idle"){
-                    IdleState();
-                }
+                IdleState();
                 break;
             case "Patrol":
-                while(states[currentState] == "Patrol"){
-                    PatrolState();
-                }
+                PatrolState();
                 break;
             case "Combat":
-                while(states[currentState] == "Combat"){
-                    CombatState();
-                }
+                CombatState();
                 break;
             default:
             break;
@@ -90,13 +84,20 @@ public class EnemyStateManager : MonoBehaviour
         Debug.Log("in patrol state");
     }
 
+    bool combatShot = false;
     private void CombatState()
     {
-        bool shot = false;
-        while (!shot){
+        while (!combatShot){
             audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
-            shot = true;
+            combatShot = true;
+            StartCoroutine(FireDelay(1f));
         }
+    }
+
+    IEnumerator FireDelay(float rateOfFire)
+    {
+        yield return new WaitForSeconds(rateOfFire);
+        combatShot = false;
     }
 
     private void IdleState()
