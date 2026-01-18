@@ -40,6 +40,7 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] private float enemyRange = 15f;
 
     private bool canTrack = true;
+    private bool canSeePlayer;
 
     void Awake()
     {
@@ -71,7 +72,21 @@ public class EnemyStateManager : MonoBehaviour
 
     void Update()
     {
+        RaycastHit hit;
+        //Ray playerVision = new Ray(transform.position, transform.forward);
 
+        if(Physics.Raycast(transform.position, transform.forward, out hit, enemyRange))
+        {
+            if(hit.transform.tag == "Player"){
+                Debug.Log("Can see player");
+                //Debug.DrawLine(playerVision.origin, hit.point, Color.red, 2, false);
+                canSeePlayer = true;
+            }
+            else
+            {
+                canSeePlayer = false;
+            }
+        }
     }
 
     public void SwitchState(State destinationState)
@@ -117,30 +132,15 @@ public class EnemyStateManager : MonoBehaviour
                 agent.SetDestination(player.transform.position);
             }
             //if player is in eyesight and less than a certain range, switch to combat
-            if(Vector3.Distance(transform.position, player.transform.position) <= enemyRange)
+            if(Vector3.Distance(transform.position, player.transform.position) <= enemyRange && canSeePlayer)
             {
-            //when within range, fire raycast in the direction of the player.
-            //if hit target is not player, keep chasing.
-            //if hit target is the player, this means the player is in eyesight - ie not visually blocked by anything.
-            //switch to combat.
-                RaycastHit hit;
-                Ray playerVision = new Ray(transform.position, transform.forward);
-
-                if(Physics.Raycast(transform.position, transform.forward, out hit, enemyRange))
-                {
-                    if(hit.transform.tag == "Player"){
-                        Debug.Log("Can see player");
-                        //Debug.DrawLine(playerVision.origin, hit.point, Color.red, 2, false);
-                        SwitchState(State.Combat);
-                    }
-                }
+                SwitchState(State.Combat);
             }
-            
-            
             yield return null;  
         }
     }
 
+    bool combatShot = false;
     private IEnumerator CombatState()
     {
         //fire at the player.
@@ -148,9 +148,17 @@ public class EnemyStateManager : MonoBehaviour
             agent.SetDestination(transform.position);
         }
         Debug.Log("I am fighting now");
+
         while(true){
             transform.LookAt(player.transform);
-            if(Vector3.Distance(transform.position, player.transform.position) > enemyRange)
+
+            //combat testing
+                while (!combatShot){
+                    audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
+                    combatShot = true;
+                    StartCoroutine(FireDelay(1f));
+                }
+            if(!canSeePlayer || Vector3.Distance(transform.position, player.transform.position) > enemyRange)
             {
                 SwitchState(State.Chase);
             }
@@ -160,13 +168,7 @@ public class EnemyStateManager : MonoBehaviour
             yield return null;  
         }
     }
-
-    // while (!combatShot){
-                //     audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
-                //     combatShot = true;
-                //     StartCoroutine(FireDelay(1f));
-                // }
-    bool combatShot = true;
+    
     IEnumerator FireDelay(float rateOfFire)
     {
         yield return new WaitForSeconds(rateOfFire);
