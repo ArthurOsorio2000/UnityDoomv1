@@ -29,11 +29,7 @@ public class HealthComponent : MonoBehaviour
             //(respawning enemies or reusing bullets)
             //Destroy(gameObeject) is a good way to save memory. depending on what you need, do either or
             //it's like sending to graveyard vs exile lol
-
-            //gameObject.SetActive(false);
+            gameObject.SetActive(false);
             Debug.LogFormat("{0} died", gameObject.name);
-            //since the player has a health component, this will destroy the player object. what problems will
-            //this cause
-            Destroy(gameObject);
         }
     }

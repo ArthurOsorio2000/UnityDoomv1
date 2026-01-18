@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 
 [RequireComponent(typeof(HealthComponent))]
@@ -12,7 +13,6 @@ public class EnemyStateManager : MonoBehaviour
     private NavMeshAgent agent;
     private GameObject[] playerList;
     private GameObject player;
-
     [SerializeField] private int currentState;
     
     //create a list of states - maybe a dictionary with numbers being a key and a string of the state being a value?
@@ -20,8 +20,10 @@ public class EnemyStateManager : MonoBehaviour
     //in update - constantly keep polling a statemachine switch to keep track of the current state
     //eg if in combat state run the combat state method in update
     //if in patrol state run the patrol state method in update
-    Dictionary<int, string> states = new Dictionary<int, string>();
+    //Dictionary<int, string> states = new Dictionary<int, string>();
     
+    [System.Serializable] public enum State {Idle, Patrol, Chase, Combat};
+    Coroutine _activeState;
 
     // public EnemySpawnState SpawnState = new EnemySpawnState();
     // public EnemyIdleState IdleState = new EnemyIdleState();
@@ -35,12 +37,17 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] private float enemySpeed = 5f;
     [SerializeField] private float enemyHealth = 200f;
     [SerializeField] private float enemyAtkDamage = 50f;
+    [SerializeField] private float enemyRange = 15f;
+
+    private bool canTrack = true;
 
     void Awake()
     {
-        states.Add(1, "Idle");
-        states.Add(2, "Patrol");
-        states.Add(3, "Combat");
+        // states.Add(1, "Idle");
+        // states.Add(2, "Patrol");
+        // states.Add(3, "Combat");
+        healthComponent = GetComponent<HealthComponent>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     //like components for each enemy type should be instantiated here,
@@ -48,73 +55,128 @@ public class EnemyStateManager : MonoBehaviour
     void Start()
     {
         //assign values to external Components
-        healthComponent = GetComponent<HealthComponent>();
-        agent = GetComponent<NavMeshAgent>();
         healthComponent.health = enemyHealth;
         audioManager = AudioManager.Instance;
-
-        currentState = 1;
-
         enemyWeaponFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
-
         playerList = GameObject.FindGameObjectsWithTag("Player");
         if (playerList != null){
            player = playerList[0];
         }
+
+        SwitchState(State.Idle);
+
+        float dist = Vector3.Distance(player.transform.position, transform.position);
+        Debug.Log("Distance to player: " + dist);
     }
 
     void Update()
     {
-        //keep in mind this is polling every frame. once you start the game, this is playing a method every single time
-        //maybe start a coroutine with a flag instead?
-        switch (states[currentState])
+
+    }
+
+    public void SwitchState(State destinationState)
+    {
+        IEnumerator state = null;
+        switch(destinationState) {
+            case State.Idle : state = IdleState(); break;
+            case State.Patrol : state = PatrolState(); break;
+            case State.Chase : state = ChaseState(); break;
+            case State.Combat : state = CombatState(); break;
+        }
+       
+       if(_activeState != null)
         {
-            case "Idle":
-                IdleState();
-                break;
-            case "Patrol":
-                PatrolState();
-                break;
-            case "Combat":
-                CombatState();
-                break;
-            default:
-            break;
+            StopCoroutine(_activeState);
+        }
+
+        _activeState = StartCoroutine(state);
+    }
+
+    private IEnumerator IdleState()
+    {
+        while(true){
+            Debug.Log("in Idle state");
+            SwitchState(State.Chase);
+            yield return null;
         }
     }
 
-    public void SwitchState()
+    public IEnumerator PatrolState()
     {
-        
+        while(true){
+            Debug.Log("in patrol state");
+            yield return null;  
+        }
     }
 
-    public void PatrolState()
+    private IEnumerator ChaseState()
     {
-        Debug.Log("in patrol state");
+        while(true){
+            //if the agent is in the middle of doing this while being destroyed, it will throw an error?
+            if(canTrack){
+                agent.SetDestination(player.transform.position);
+            }
+            //if player is in eyesight and less than a certain range, switch to combat
+            if(Vector3.Distance(transform.position, player.transform.position) <= enemyRange)
+            {
+            //when within range, fire raycast in the direction of the player.
+            //if hit target is not player, keep chasing.
+            //if hit target is the player, this means the player is in eyesight - ie not visually blocked by anything.
+            //switch to combat.
+                RaycastHit hit;
+                Ray playerVision = new Ray(transform.position, transform.forward);
+
+                if(Physics.Raycast(transform.position, transform.forward, out hit, enemyRange))
+                {
+                    if(hit.transform.tag == "Player"){
+                        Debug.Log("Can see player");
+                        //Debug.DrawLine(playerVision.origin, hit.point, Color.red, 2, false);
+                        SwitchState(State.Combat);
+                    }
+                }
+            }
+            
+            
+            yield return null;  
+        }
     }
 
+    private IEnumerator CombatState()
+    {
+        //fire at the player.
+        if(canTrack){
+            agent.SetDestination(transform.position);
+        }
+        Debug.Log("I am fighting now");
+        while(true){
+            transform.LookAt(player.transform);
+            if(Vector3.Distance(transform.position, player.transform.position) > enemyRange)
+            {
+                SwitchState(State.Chase);
+            }
+            //once the player is within a certain range of the player, start combat.
+            //once the player is outside the maximum combat range, switch to chasing.
+            
+            yield return null;  
+        }
+    }
+
+    // while (!combatShot){
+                //     audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
+                //     combatShot = true;
+                //     StartCoroutine(FireDelay(1f));
+                // }
     bool combatShot = true;
-    private void CombatState()
-    {
-        agent.SetDestination(player.transform.position);
-
-        // while (!combatShot){
-        //     audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
-        //     combatShot = true;
-        //     StartCoroutine(FireDelay(1f));
-        // }
-    }
-
     IEnumerator FireDelay(float rateOfFire)
     {
         yield return new WaitForSeconds(rateOfFire);
         combatShot = false;
     }
 
-    private void IdleState()
+    void OnDestroy()
     {
-        Debug.Log("in Idle state");
+        canTrack = false;
+        Destroy(this);
     }
 
-    //should the look function be here, so that enemies in idle and combat state can look around as well?
 }

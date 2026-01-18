@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
         {
             playerControls = PlayerControls.Instance;
         }
+        
     }
     
     void Start()
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
         //object as the player controller?
         playerHealthComponent.health = 200;
         //also instantiate and edit the initial health of a health component
+        gameObject.tag = "Player";
     }
 
     // Update is called once per frame
