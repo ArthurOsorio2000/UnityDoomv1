@@ -1,15 +1,18 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
 
 
 [RequireComponent(typeof(HealthComponent))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class EnemyStateManager : MonoBehaviour
 {
 
+    private NavMeshAgent agent;
+    private GameObject[] playerList;
+    private GameObject player;
 
-    //add thing on top
-    //literally just cut everything down to one class
     [SerializeField] private int currentState;
     
     //create a list of states - maybe a dictionary with numbers being a key and a string of the state being a value?
@@ -18,6 +21,7 @@ public class EnemyStateManager : MonoBehaviour
     //eg if in combat state run the combat state method in update
     //if in patrol state run the patrol state method in update
     Dictionary<int, string> states = new Dictionary<int, string>();
+    
 
     // public EnemySpawnState SpawnState = new EnemySpawnState();
     // public EnemyIdleState IdleState = new EnemyIdleState();
@@ -45,6 +49,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         //assign values to external Components
         healthComponent = GetComponent<HealthComponent>();
+        agent = GetComponent<NavMeshAgent>();
         healthComponent.health = enemyHealth;
         audioManager = AudioManager.Instance;
 
@@ -52,6 +57,10 @@ public class EnemyStateManager : MonoBehaviour
 
         enemyWeaponFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
 
+        playerList = GameObject.FindGameObjectsWithTag("Player");
+        if (playerList != null){
+           player = playerList[0];
+        }
     }
 
     void Update()
@@ -84,14 +93,16 @@ public class EnemyStateManager : MonoBehaviour
         Debug.Log("in patrol state");
     }
 
-    bool combatShot = false;
+    bool combatShot = true;
     private void CombatState()
     {
-        while (!combatShot){
-            audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
-            combatShot = true;
-            StartCoroutine(FireDelay(1f));
-        }
+        agent.SetDestination(player.transform.position);
+
+        // while (!combatShot){
+        //     audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
+        //     combatShot = true;
+        //     StartCoroutine(FireDelay(1f));
+        // }
     }
 
     IEnumerator FireDelay(float rateOfFire)
