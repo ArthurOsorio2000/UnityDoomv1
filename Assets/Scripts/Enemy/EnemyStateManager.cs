@@ -78,21 +78,21 @@ public class EnemyStateManager : MonoBehaviour
     void CanSeePlayer()
     {
         RaycastHit hit;
-        Vector3 lookDirection = player.transform.position - transform.position;
-        Ray enemyVision = new Ray(transform.position, lookDirection);
+        Vector3 directionTowardsPlayer = player.transform.position - transform.position;
+        //Ray enemyVision = new Ray(transform.position, directionTowardsPlayer);
         
         
-        if(Physics.Raycast(transform.position, lookDirection, out hit, enemyRange))
+        if(Physics.Raycast(transform.position, directionTowardsPlayer, out hit, enemyRange))
         {
             if(hit.transform.tag == "Player"){
                 //Debug.Log("Can see player");
-                Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
+                //Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
                 canSeePlayer = true;
             }
             //the reason no drawlines were appearing during the bug were because they were hitting this point and not triggering anything
             else
             {
-                Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+                //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
                 canSeePlayer = false;
             }
         }else
@@ -171,9 +171,11 @@ public class EnemyStateManager : MonoBehaviour
             
             //combat testing
             while (!combatShot && canSeePlayer){
-                audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
+                //wait a random amount of time before firing at player with a minimum response time of 0.3 seconds?
+                audioManager.PlaySoundEffect(enemyWeaponFX, transform, 0.7f, 1);
                 combatShot = true;
-                StartCoroutine(FireDelay(1f));
+                //start a coroutine to move slightly in a random direction before engaging in firedelay
+                StartCoroutine(FireDelay(Random.Range(1f, 1.5f)));
             }
             if (Vector3.Distance(transform.position, player.transform.position) > enemyRange)
             {
@@ -185,7 +187,7 @@ public class EnemyStateManager : MonoBehaviour
             yield return null;  
         }
     }
-    
+
     IEnumerator FireDelay(float rateOfFire)
     {
         yield return new WaitForSeconds(rateOfFire);

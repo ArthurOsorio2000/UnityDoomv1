@@ -29,10 +29,14 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySoundEffect(AudioClip audioClip, Transform spawnTransform, float volume)
+    public void PlaySoundEffect(AudioClip audioClip, Transform spawnTransform, float volume, int spatialBlend)
     {
         //spawn gameObject
         AudioSource audioSource = Instantiate(soundEffectObject, spawnTransform.position, Quaternion.identity);
+        //set spacial blend to 3D
+        audioSource.spatialBlend = spatialBlend;
+
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
         //assign the audioclip
         audioSource.clip = audioClip;
         //assign volume

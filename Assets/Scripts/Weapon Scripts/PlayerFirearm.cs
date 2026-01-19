@@ -55,7 +55,7 @@ public abstract class PlayerFirearm : MonoBehaviour
     public virtual void Shoot(AudioClip fireFX, float damage, float range, float spreadRadius, float rateOfFire, int bulletsPerShot = 1)
     {
         if (canFire){
-            audioManager.PlaySoundEffect(fireFX, transform, 1f);
+            audioManager.PlaySoundEffect(fireFX, transform, 1f, 0);
 
             for(int i = 0; i < bulletsPerShot; i++){
                 FireBullet(damage, range, spreadRadius);
