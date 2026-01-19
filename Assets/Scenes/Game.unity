@@ -853,6 +853,7 @@ MonoBehaviour:
   enemyHealth: 200
   enemyAtkDamage: 50
   enemyRange: 15
+  canSeePlayer: 0
 --- !u!114 &304987896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1205,7 +1206,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &368900139
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1303,6 +1304,7 @@ MonoBehaviour:
   enemyHealth: 200
   enemyAtkDamage: 50
   enemyRange: 15
+  canSeePlayer: 0
 --- !u!114 &368900144
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -77,27 +77,29 @@ public class EnemyStateManager : MonoBehaviour
 
     void CanSeePlayer()
     {
-        //when this is in update, occasionally this code does not work. Is it because of Coroutines?
-        //when I change elevations, or the enemy is elevated and I am not or on a less elevated surface, canSeePlayer is still true, even when cannot see player
         RaycastHit hit;
-        Ray enemyVision = new Ray(transform.position, transform.forward);
+        Vector3 lookDirection = player.transform.position - transform.position;
+        Ray enemyVision = new Ray(transform.position, lookDirection);
         
-        if(Physics.Raycast(transform.position, transform.forward, out hit, enemyRange))
+        
+        if(Physics.Raycast(transform.position, lookDirection, out hit, enemyRange))
         {
             if(hit.transform.tag == "Player"){
-                Debug.Log("Can see player");
-                //Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
+                //Debug.Log("Can see player");
+                Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
                 canSeePlayer = true;
             }
+            //the reason no drawlines were appearing during the bug were because they were hitting this point and not triggering anything
             else
             {
+                Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
                 canSeePlayer = false;
             }
         }else
-            {
-                //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
-                canSeePlayer = false;
-            }
+        {
+            //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+            canSeePlayer = false;
+        }
     }
 
     public void SwitchState(State destinationState)
@@ -173,7 +175,7 @@ public class EnemyStateManager : MonoBehaviour
                 combatShot = true;
                 StartCoroutine(FireDelay(1f));
             }
-            if (!canSeePlayer || Vector3.Distance(transform.position, player.transform.position) > enemyRange)
+            if (Vector3.Distance(transform.position, player.transform.position) > enemyRange)
             {
                 SwitchState(State.Chase);
             }
