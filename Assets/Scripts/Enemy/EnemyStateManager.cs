@@ -40,7 +40,7 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] private float enemyRange = 15f;
 
     private bool canTrack = true;
-    private bool canSeePlayer;
+    [SerializeField] private bool canSeePlayer;
 
     void Awake()
     {
@@ -72,21 +72,32 @@ public class EnemyStateManager : MonoBehaviour
 
     void Update()
     {
-        RaycastHit hit;
-        //Ray playerVision = new Ray(transform.position, transform.forward);
+        CanSeePlayer();
+    }
 
+    void CanSeePlayer()
+    {
+        //when this is in update, occasionally this code does not work. Is it because of Coroutines?
+        //when I change elevations, or the enemy is elevated and I am not or on a less elevated surface, canSeePlayer is still true, even when cannot see player
+        RaycastHit hit;
+        Ray enemyVision = new Ray(transform.position, transform.forward);
+        
         if(Physics.Raycast(transform.position, transform.forward, out hit, enemyRange))
         {
             if(hit.transform.tag == "Player"){
                 Debug.Log("Can see player");
-                //Debug.DrawLine(playerVision.origin, hit.point, Color.red, 2, false);
+                //Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
                 canSeePlayer = true;
             }
             else
             {
                 canSeePlayer = false;
             }
-        }
+        }else
+            {
+                //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+                canSeePlayer = false;
+            }
     }
 
     public void SwitchState(State destinationState)
@@ -143,6 +154,8 @@ public class EnemyStateManager : MonoBehaviour
     bool combatShot = false;
     private IEnumerator CombatState()
     {
+        //going into this state it is assumed canSeePlayer is always true
+        //implement canSeePlayer check
         //fire at the player.
         if(canTrack){
             agent.SetDestination(transform.position);
@@ -151,14 +164,16 @@ public class EnemyStateManager : MonoBehaviour
 
         while(true){
             transform.LookAt(player.transform);
-
+            //ensure entire model doesn't tilt towards player during height difference
+            transform.eulerAngles = new Vector3(Mathf.Clamp(transform.eulerAngles.x, 0, 0), transform.eulerAngles.y, transform.eulerAngles.z);
+            
             //combat testing
-                while (!combatShot){
-                    audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
-                    combatShot = true;
-                    StartCoroutine(FireDelay(1f));
-                }
-            if(!canSeePlayer || Vector3.Distance(transform.position, player.transform.position) > enemyRange)
+            while (!combatShot && canSeePlayer){
+                audioManager.PlaySoundEffect(enemyWeaponFX, transform, 1f);
+                combatShot = true;
+                StartCoroutine(FireDelay(1f));
+            }
+            if (!canSeePlayer || Vector3.Distance(transform.position, player.transform.position) > enemyRange)
             {
                 SwitchState(State.Chase);
             }

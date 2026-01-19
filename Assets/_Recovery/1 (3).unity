@@ -853,6 +853,7 @@ MonoBehaviour:
   enemyHealth: 200
   enemyAtkDamage: 50
   enemyRange: 15
+  canSeePlayer: 0
 --- !u!114 &304987896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1303,6 +1304,7 @@ MonoBehaviour:
   enemyHealth: 200
   enemyAtkDamage: 50
   enemyRange: 15
+  canSeePlayer: 0
 --- !u!114 &368900144
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
         //object as the player controller?
         playerHealthComponent.health = 200;
         //also instantiate and edit the initial health of a health component
-        gameObject.tag = "Player";
+        //gameObject.tag = "Player";
     }
 
     // Update is called once per frame

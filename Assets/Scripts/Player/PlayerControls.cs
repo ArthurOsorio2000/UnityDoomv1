@@ -15,7 +15,7 @@ public class PlayerControls : MonoBehaviour
         }
     }
     [SerializeField] private float playerSpeed = 10f;
-    [SerializeField] private float gravityValue = -9.81f;
+    [SerializeField] private float gravityValue = -50f;
 
     private CharacterController controller;
     private InputManager inputManager;
@@ -30,7 +30,7 @@ public class PlayerControls : MonoBehaviour
         inputManager = InputManager.Instance;
         controller = GetComponent<CharacterController>();
         playerCameraTransform = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
-        gameObject.tag = "Player";
+        //gameObject.tag = "Player";
     }
 
     void PlayerControlsSingletonCheck()

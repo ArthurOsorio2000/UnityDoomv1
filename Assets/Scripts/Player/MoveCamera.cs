@@ -6,6 +6,11 @@ public class MoveCamera : MonoBehaviour
 
     void Awake()
     {
+        
+    }
+
+    void Start()
+    {
         cameraPosition = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
     void Update()
