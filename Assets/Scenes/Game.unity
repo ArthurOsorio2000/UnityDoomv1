@@ -550,9 +550,10 @@ MonoBehaviour:
   fireFX: {fileID: 0}
   damage: 0
   range: 0
-  rateOfFire: 0
-  bulletsPerShot: 0
   spreadRadius: 0
+  rateOfFire: 0
+  audibleRange: 0
+  bulletsPerShot: 0
   handgunID: 0
 --- !u!1 &247962634
 GameObject:
@@ -749,7 +750,7 @@ GameObject:
   - component: {fileID: 304987894}
   - component: {fileID: 304987892}
   - component: {fileID: 304987898}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy Prototype 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -847,13 +848,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2dd604f4a5abba44b606b1ea2cd37e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
-  currentState: 0
   enemyWeaponFX: {fileID: 0}
   enemySpeed: 5
   enemyHealth: 200
   enemyAtkDamage: 50
   enemyRange: 15
   canSeePlayer: 0
+  playerDetected: 0
 --- !u!114 &304987896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1298,13 +1299,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2dd604f4a5abba44b606b1ea2cd37e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
-  currentState: 0
   enemyWeaponFX: {fileID: 0}
   enemySpeed: 5
   enemyHealth: 200
   enemyAtkDamage: 50
   enemyRange: 15
   canSeePlayer: 0
+  playerDetected: 0
 --- !u!114 &368900144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3376,9 +3377,10 @@ MonoBehaviour:
   fireFX: {fileID: 0}
   damage: 0
   range: 0
-  rateOfFire: 0
-  bulletsPerShot: 0
   spreadRadius: 0
+  rateOfFire: 0
+  audibleRange: 0
+  bulletsPerShot: 0
   AssaultRifleID: 1
 --- !u!1 &1919686046
 GameObject:
@@ -3584,9 +3586,10 @@ MonoBehaviour:
   fireFX: {fileID: 0}
   damage: 0
   range: 0
-  rateOfFire: 0
-  bulletsPerShot: 0
   spreadRadius: 0
+  rateOfFire: 0
+  audibleRange: 0
+  bulletsPerShot: 0
   shotgunID: 2
 --- !u!1 &2095862873
 GameObject:

@@ -8,20 +8,25 @@ public abstract class PlayerFirearm : MonoBehaviour
     //get the spread of the crosshair and import it across to the reticle so that the spread can affect
     //the radius of the crosshair and dynamically changes based on player movement, firing or playerdamage?
     //all the things that need to be changed by the inheriting weapons
-    //note, changing these in editor doesn't change anything about the weapon - test why
+    [Header("SFX")]
     [SerializeField] protected AudioClip fireFX;
+    [Header("Weapon Attributes")]
     [SerializeField] protected float damage;
     [SerializeField] protected float range;
+    [SerializeField] protected float spreadRadius;
     [SerializeField] protected float rateOfFire;
+    [SerializeField] protected float audibleRange;
     [SerializeField] protected int bulletsPerShot;
     //note all spread radius numbers need to be between 0 and 1, as the unit circle used to randomize
     //the spread has a maximum radius of 1
-    [SerializeField] protected float spreadRadius;
 
     //all the things that can stay the same/get inherited
     protected Camera playerCamera;
     protected InputManager inputManager;
     protected AudioManager audioManager;
+    protected LayerMask enemyLayer = 64;
+    protected Collider[] enemiesInEarshot;
+
     
     //if I want to add shot trails
     //protected LineRenderer lineRenderer;
@@ -46,16 +51,34 @@ public abstract class PlayerFirearm : MonoBehaviour
     {
         UpdateWeapon();
     }
-
-    //initialize variable for default firerate control function in shoot method
     
     //if player isn't moving, I can either remove spread or make it 0?
     protected bool canFire = true;
-    //learning optional parameter - adding a value makes it default, and omitting it lets you only have to add it for certain uses
-    public virtual void Shoot(AudioClip fireFX, float damage, float range, float spreadRadius, float rateOfFire, int bulletsPerShot = 1)
+
+    //to visualise audio range
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, audibleRange);
+    }
+
+    public virtual void Shoot(AudioClip fireFX, float damage, float range, float spreadRadius, float rateOfFire, float audibleRange, int bulletsPerShot = 1)
     {
         if (canFire){
             audioManager.PlaySoundEffect(fireFX, transform, 1f, 0);
+
+            //get list of enemies in earshot and toggle them to detect player and chase
+            //bug - enemy layer doesn't work
+            enemiesInEarshot = Physics.OverlapSphere(transform.position, audibleRange, enemyLayer);
+            foreach (Collider enemyInEarshot in enemiesInEarshot)
+            {
+                print("enemy heard: " + enemyInEarshot.gameObject.name);
+                EnemyStateManager enemy = enemyInEarshot.GetComponent<EnemyStateManager>();
+                
+                if (enemy != null)
+                {
+                    enemy.HearPlayer(true);
+                }
+            }
 
             for(int i = 0; i < bulletsPerShot; i++){
                 FireBullet(damage, range, spreadRadius);
@@ -84,7 +107,7 @@ public abstract class PlayerFirearm : MonoBehaviour
         //check for hit
         if (Physics.Raycast(shotOrigin, shotDirection, out hit, range))
         {
-            //for debugging
+            //action if hit
             Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
 
             //for shot trails
@@ -108,6 +131,7 @@ public abstract class PlayerFirearm : MonoBehaviour
         }
     }
 
+    //can be toolboxed - also appears in EnemyStateManager
     IEnumerator FireDelay(float rateOfFire)
     {
         yield return new WaitForSeconds(rateOfFire);

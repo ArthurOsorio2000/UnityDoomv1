@@ -10,15 +10,16 @@ public class Shotgun : PlayerFirearm
         damage = 75f;
         range = 12f;
         rateOfFire = 1.05f;
-        bulletsPerShot = 12;
         spreadRadius = 0.2f;
+        audibleRange = 20f;
+        bulletsPerShot = 12;
     }
 
     protected override void UpdateWeapon()
     {
         if (inputManager.PlayerSingleShot())
         {
-            Shoot(fireFX, damage, range, spreadRadius ,rateOfFire, bulletsPerShot);
+            Shoot(fireFX, damage, range, spreadRadius ,rateOfFire, audibleRange, bulletsPerShot);
         }
     }
 

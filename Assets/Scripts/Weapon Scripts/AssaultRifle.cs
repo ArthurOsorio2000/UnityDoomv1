@@ -11,13 +11,14 @@ public class AssaultRifle : PlayerFirearm
         range = 30f;
         rateOfFire = 0.12f;
         spreadRadius = 0.05f;
+        audibleRange = 15f;
     }
 
     protected override void UpdateWeapon()
     {
         if (inputManager.PlayerHoldShot())
         {
-            Shoot(fireFX, damage, range, spreadRadius ,rateOfFire);
+            Shoot(fireFX, damage, range, spreadRadius ,rateOfFire, audibleRange);
         }
     }
 }
