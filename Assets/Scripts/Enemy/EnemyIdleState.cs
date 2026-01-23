@@ -56,17 +56,17 @@
 
 //     }
 
-//     IEnumerator SweepArea(EnemyStateManager enemy, float turnLength = 3f, float lookRadius = 179f, float lookLength = 1)
-//     {
-//         //first look
+    // IEnumerator SweepArea(EnemyStateManager enemy, float turnLength = 3f, float lookRadius = 179f, float lookLength = 1)
+    // {
+    //     //first look
 
-//         Vector3 byAngles = new Vector3(0f, lookRadius, 0f);
-//         Quaternion fromAngle = enemy.transform.rotation;
-//         Quaternion toAngle = Quaternion.Euler(enemy.transform.eulerAngles + byAngles);
-//         for(var t = 0f; t < 1; t += Time.deltaTime / turnLength)
-//         {
-//             enemy.transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
-//             yield return null;
-//         }
-//     }
+    //     Vector3 byAngles = new Vector3(0f, lookRadius, 0f);
+    //     Quaternion fromAngle = enemy.transform.rotation;
+    //     Quaternion toAngle = Quaternion.Euler(enemy.transform.eulerAngles + byAngles);
+    //     for(var t = 0f; t < 1; t += Time.deltaTime / turnLength)
+    //     {
+    //         enemy.transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
+    //         yield return null;
+    //     }
+    // }
 // }

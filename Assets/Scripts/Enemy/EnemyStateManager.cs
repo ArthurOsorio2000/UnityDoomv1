@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 
 
+
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyStateManager : MonoBehaviour
@@ -16,16 +17,26 @@ public class EnemyStateManager : MonoBehaviour
     
     [System.Serializable] public enum State {Idle, Patrol, Chase, Combat};
 
-     [Header("SFX")]
+    [Header("SFX")]
     [SerializeField] private AudioClip enemyWeaponFX;
 
-     [Header("Enemy Attributes")]
-    [SerializeField] private float enemySpeed = 5f;
+    [Header("Enemy Attributes")]
     [SerializeField] private float enemyHealth = 200f;
-    [SerializeField] private float enemyAtkDamage = 50f;
-    [SerializeField] private float enemyRange = 15f;
     [SerializeField] private float audibleRange = 20f;
 
+    [Header("Idle State Parameters")]
+    [SerializeField] private float idleSweepAngle = 178f;
+    [SerializeField] private float idleSweepRange = 100f;
+
+    [Header("Patrol State Parameters")]
+    [SerializeField] private float patrolSpeed = 5f;
+
+    [Header("Chase State Parameters")]
+    [SerializeField] private float chaseSpeed = 5f;
+
+    [Header("Combat State Parameters")]
+    [SerializeField] private float combatAtkDamage = 50f;
+    [SerializeField] private float combatRange = 15f;
 
      [Header("Debug Fields")]
     [SerializeField] private bool canSeePlayer;
@@ -75,7 +86,7 @@ public class EnemyStateManager : MonoBehaviour
         //Ray enemyVision = new Ray(transform.position, directionTowardsPlayer);
         
         
-        if(Physics.Raycast(transform.position, directionTowardsPlayer, out hit, enemyRange))
+        if(Physics.Raycast(transform.position, directionTowardsPlayer, out hit, combatRange))
         {
             if(hit.transform.tag == "Player"){
                 //Debug.Log("Can see player");
@@ -103,7 +114,12 @@ public class EnemyStateManager : MonoBehaviour
         while(true){
             if (!playerDetected)
             {
+                StartCoroutine(DoSweep(idleSweepAngle));
+                yield return new WaitForSeconds(1f);
+                StopCoroutine(DoSweep(idleSweepAngle));
+
                 Debug.Log("in Idle state");
+                
             }
             else
             {
@@ -113,31 +129,43 @@ public class EnemyStateManager : MonoBehaviour
         }
     }
 
-    void DoSweep()
+    private bool lookDelay = false;
+    //1: should I turn this into an IEnumerator so it can wait a little instead of casting a grid every frame, or should I call another IEnumerator to pause this for loop for like, 0.1 seconds
+    //2: it's looking down at an angle for some reason
+    IEnumerator DoSweep(float sweepAngle, float lengthOfLook = 5)
     {
-        RaycastHit hit;
-        //for loop? should this be in an IEnumerator? should this behaviour be in the Idle state instead?
-        Vector3 directionTowardsPlayer = player.transform.position - transform.position;
-        //Ray enemyVision = new Ray(transform.position, directionTowardsPlayer);
-        
-        
-        if(Physics.Raycast(transform.position, directionTowardsPlayer, out hit, enemyRange))
-        {
-            if(hit.transform.tag == "Player"){
-                //Debug.Log("Can see player");
-                //Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
-                canSeePlayer = true;
-            }
-            else
+        //it is that complex. refer to the phet on firefox to work out the initial and final angle - tip: physics
+        Vector3 angle = new Vector3(sweepAngle / 2, 0, sweepAngle / 2);
+        //enemy always starts sweep facing left?
+        Vector3 sweepInitialAngle = transform.forward - angle;
+        Vector3 sweepFinalAngle = angle + transform.forward;
+        Vector3 shotOrigin = transform.position;
+    
+        for(float t = 0f; t < lengthOfLook; t += Time.deltaTime / lengthOfLook){
+            RaycastHit hit;
+            Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t));
+
+            if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, idleSweepRange))
             {
-                //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+                if(hit.transform.tag == "Player"){
+                    //Debug.Log("Can see player");
+                    Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
+                    //canSeePlayer = true;
+                }
+                else
+                {
+                    Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
+                    canSeePlayer = false;
+                }
+            }else
+            {
+                    Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 2, false);
                 canSeePlayer = false;
+                yield return null;
             }
-        }else
-        {
-            //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
-            canSeePlayer = false;
+            //yield return new WaitForSeconds(lengthOfLook / frequency);
         }
+
     }
 
 //---------------------------------------- Code for look sweep ---------------------------------------------
@@ -208,7 +236,7 @@ public class EnemyStateManager : MonoBehaviour
             }
             //if the player is out of eyesight for a while, return to idle?
             //if player is in eyesight and less than a certain range, switch to combat
-            if(Vector3.Distance(transform.position, player.transform.position) <= enemyRange && canSeePlayer)
+            if(Vector3.Distance(transform.position, player.transform.position) <= combatRange && canSeePlayer)
             {
                 SwitchState(State.Combat);
             }
@@ -242,7 +270,7 @@ public class EnemyStateManager : MonoBehaviour
                 //start a coroutine to move slightly in a random direction before engaging in firedelay
                 StartCoroutine(FireDelay(Random.Range(1f, 1.5f)));
             }
-            if (Vector3.Distance(transform.position, player.transform.position) > enemyRange || !canSeePlayer)
+            if (Vector3.Distance(transform.position, player.transform.position) > combatRange || !canSeePlayer)
             {
                 hasCalledOut = false;
                 SwitchState(State.Chase);
