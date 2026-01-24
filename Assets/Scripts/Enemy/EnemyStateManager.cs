@@ -25,7 +25,7 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] private float audibleRange = 20f;
 
     [Header("Idle State Parameters")]
-    [SerializeField] private float idleSweepAngle = 45f;
+    [SerializeField] private float idleSweepAngle = 90f;
     [SerializeField] private float idleSweepRange = 100f;
 
     [Header("Patrol State Parameters")]
@@ -114,9 +114,9 @@ public class EnemyStateManager : MonoBehaviour
         while(true){
             if (!playerDetected)
             {
-                StartCoroutine(DoSweep(idleSweepAngle));
+                StartCoroutine(DoSweep(idleSweepAngle, idleSweepRange));
                 yield return new WaitForSeconds(1f);
-                StopCoroutine(DoSweep(idleSweepAngle));
+                StopCoroutine(DoSweep(idleSweepAngle, idleSweepRange));
 
                 Debug.Log("in Idle state");
                 
@@ -132,22 +132,22 @@ public class EnemyStateManager : MonoBehaviour
     private bool lookDelay = false;
     //1: should I turn this into an IEnumerator so it can wait a little instead of casting a grid every frame, or should I call another IEnumerator to pause this for loop for like, 0.1 seconds
     //2: it's looking down at an angle for some reason
-    IEnumerator DoSweep(float sweepAngle, float lengthOfLook = 5)
+    IEnumerator DoSweep(float sweepAngle, float sweepRange, float lengthOfLook = 5)
     {
         //it is that complex. refer to the phet on firefox to work out the initial and final angle - tip: physics
         //this somewhat does what I want  but doesn't respond correctly to my changes which means right answer wrong solution - figure out what else needs to be changed. works at 178 deg but not 90 or 45.
         Vector3 angleX = new Vector3(sweepAngle, 0, 0);
         Vector3 angleZ = new Vector3(0, 0, 180 - sweepAngle);
-        //enemy always starts sweep facing left?
-        Vector3 sweepInitialAngle = transform.forward - angleX + angleZ;
-        Vector3 sweepFinalAngle = transform.forward + angleX  + angleZ;
+        //changing the rotation of the transform changes the height angle of the sweep, not the direction
+        Vector3 sweepInitialAngle = transform.rotation.eulerAngles - angleX + angleZ;
+        Vector3 sweepFinalAngle = transform.rotation.eulerAngles + angleX  + angleZ;
         Vector3 shotOrigin = transform.position;
     
         for(float t = 0f; t < lengthOfLook; t += Time.deltaTime / lengthOfLook){
             RaycastHit hit;
             Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t));
 
-            if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, idleSweepRange))
+            if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, sweepRange))
             {
                 if(hit.transform.tag == "Player"){
                     //Debug.Log("Can see player");
