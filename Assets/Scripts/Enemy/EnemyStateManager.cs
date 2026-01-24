@@ -25,7 +25,7 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] private float audibleRange = 20f;
 
     [Header("Idle State Parameters")]
-    [SerializeField] private float idleSweepAngle = 178f;
+    [SerializeField] private float idleSweepAngle = 45f;
     [SerializeField] private float idleSweepRange = 100f;
 
     [Header("Patrol State Parameters")]
@@ -135,10 +135,12 @@ public class EnemyStateManager : MonoBehaviour
     IEnumerator DoSweep(float sweepAngle, float lengthOfLook = 5)
     {
         //it is that complex. refer to the phet on firefox to work out the initial and final angle - tip: physics
-        Vector3 angle = new Vector3(sweepAngle / 2, 0, sweepAngle / 2);
+        //this somewhat does what I want  but doesn't respond correctly to my changes which means right answer wrong solution - figure out what else needs to be changed. works at 178 deg but not 90 or 45.
+        Vector3 angleX = new Vector3(sweepAngle, 0, 0);
+        Vector3 angleZ = new Vector3(0, 0, 180 - sweepAngle);
         //enemy always starts sweep facing left?
-        Vector3 sweepInitialAngle = transform.forward - angle;
-        Vector3 sweepFinalAngle = angle + transform.forward;
+        Vector3 sweepInitialAngle = transform.forward - angleX + angleZ;
+        Vector3 sweepFinalAngle = transform.forward + angleX  + angleZ;
         Vector3 shotOrigin = transform.position;
     
         for(float t = 0f; t < lengthOfLook; t += Time.deltaTime / lengthOfLook){
