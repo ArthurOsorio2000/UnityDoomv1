@@ -25,7 +25,7 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] private float audibleRange = 20f;
 
     [Header("Idle State Parameters")]
-    [SerializeField] private float idleSweepAngle = 90f;
+    [SerializeField] private float idleSweepAngle = 40f;
     [SerializeField] private float idleSweepRange = 100f;
 
     [Header("Patrol State Parameters")]
@@ -76,6 +76,7 @@ public class EnemyStateManager : MonoBehaviour
         {
             playerDetected = true;
         }
+        Debug.Log(transform.forward);
     }
 
     //if I want to clamp look height so that enemies don't look straight down, I can clamp the ray angle in update
@@ -83,24 +84,24 @@ public class EnemyStateManager : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 directionTowardsPlayer = player.transform.position - transform.position;
-        //Ray enemyVision = new Ray(transform.position, directionTowardsPlayer);
+        Ray enemyVision = new Ray(transform.position, directionTowardsPlayer);
         
         
         if(Physics.Raycast(transform.position, directionTowardsPlayer, out hit, combatRange))
         {
             if(hit.transform.tag == "Player"){
-                //Debug.Log("Can see player");
-                //Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
+                Debug.Log("Can see player");
+                Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
                 canSeePlayer = true;
             }
             else
             {
-                //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+                Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
                 canSeePlayer = false;
             }
         }else
         {
-            //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+            Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
             canSeePlayer = false;
         }
     }
@@ -137,10 +138,10 @@ public class EnemyStateManager : MonoBehaviour
         //it is that complex. refer to the phet on firefox to work out the initial and final angle - tip: physics
         //this somewhat does what I want  but doesn't respond correctly to my changes which means right answer wrong solution - figure out what else needs to be changed. works at 178 deg but not 90 or 45.
         Vector3 angleX = new Vector3(sweepAngle, 0, 0);
-        Vector3 angleZ = new Vector3(0, 0, 180 - sweepAngle);
+        Vector3 angleZ = new Vector3(0, 0, sweepAngle);
         //changing the rotation of the transform changes the height angle of the sweep, not the direction
-        Vector3 sweepInitialAngle = transform.rotation.eulerAngles - angleX + angleZ;
-        Vector3 sweepFinalAngle = transform.rotation.eulerAngles + angleX  + angleZ;
+        Vector3 sweepInitialAngle = gameObject.transform.forward - angleX + angleZ;
+        Vector3 sweepFinalAngle = gameObject.transform.forward + angleX  + angleZ;
         Vector3 shotOrigin = transform.position;
     
         for(float t = 0f; t < lengthOfLook; t += Time.deltaTime / lengthOfLook){
@@ -150,9 +151,9 @@ public class EnemyStateManager : MonoBehaviour
             if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, sweepRange))
             {
                 if(hit.transform.tag == "Player"){
-                    //Debug.Log("Can see player");
+                    Debug.Log("Can see player");
                     Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
-                    //canSeePlayer = true;
+                    canSeePlayer = true;
                 }
                 else
                 {
@@ -211,6 +212,7 @@ public class EnemyStateManager : MonoBehaviour
 
 //-----------------------------------------------patrol state----------------------------------------------//
     //pathfind randomly.
+    //will work on later
     public IEnumerator PatrolState()
     {
         //choose a random spot to walk to? or choose a random spot to walk towards and idle?
@@ -248,6 +250,9 @@ public class EnemyStateManager : MonoBehaviour
 
 //-----------------------------------------------Combat state----------------------------------------------//
 
+    //note - there is a coroutine active that doesn't stop, so even though enemy can chase player, the look for player coroutine doesn't start until something ends.
+    //when enemy is alerted, all active coroutines should be stopped so that look for player takes action straight away - this is likely the idle dosweep coroutine not ending prematurely.
+    //add if player is seen, exit and stop coroutine in dosweep coroutine.
     private bool combatShot = false;
     private IEnumerator CombatState()
     {
