@@ -30,7 +30,7 @@ public class PlayerControls : MonoBehaviour
         inputManager = InputManager.Instance;
         controller = GetComponent<CharacterController>();
         playerCameraTransform = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
-        //gameObject.tag = "Player";
+        gameObject.tag = "Player";
     }
 
     void PlayerControlsSingletonCheck()

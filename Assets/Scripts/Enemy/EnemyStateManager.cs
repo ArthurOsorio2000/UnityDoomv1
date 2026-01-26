@@ -26,6 +26,7 @@ public class EnemyStateManager : MonoBehaviour
 
     [Header("Idle State Parameters")]
     [SerializeField] private float idleSweepAngle = 40f;
+    [SerializeField] private float idleSweepTime = 7f;
     [SerializeField] private float idleSweepRange = 100f;
 
     [Header("Patrol State Parameters")]
@@ -37,6 +38,7 @@ public class EnemyStateManager : MonoBehaviour
     [Header("Combat State Parameters")]
     [SerializeField] private float combatAtkDamage = 50f;
     [SerializeField] private float combatRange = 15f;
+    [SerializeField] [Tooltip("Must be a value between 0 and 1.")] private float combatSpreadRadius = 0f;
 
      [Header("Debug Fields")]
     [SerializeField] private bool canSeePlayer;
@@ -45,6 +47,7 @@ public class EnemyStateManager : MonoBehaviour
     //variables for finding GameObject with player mesh
     private GameObject[] playerList;
     private GameObject player;
+    private Vector3 directionTowardsPlayer;
 
     void Awake()
     {
@@ -70,57 +73,69 @@ public class EnemyStateManager : MonoBehaviour
 
     void Update()
     {
-        LookForPlayer();
         //temp command - if loses health, will see player.
-        if(healthComponent.health < enemyHealth)
-        {
-            playerDetected = true;
-        }
-        Debug.Log(transform.forward);
-    }
-
-    //if I want to clamp look height so that enemies don't look straight down, I can clamp the ray angle in update
-    void LookForPlayer()
-    {
-        RaycastHit hit;
-        Vector3 directionTowardsPlayer = player.transform.position - transform.position;
-        Ray enemyVision = new Ray(transform.position, directionTowardsPlayer);
-        
-        
-        if(Physics.Raycast(transform.position, directionTowardsPlayer, out hit, combatRange))
-        {
-            if(hit.transform.tag == "Player"){
-                Debug.Log("Can see player");
-                Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
-                canSeePlayer = true;
-            }
-            else
-            {
-                Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
-                canSeePlayer = false;
-            }
-        }else
-        {
-            Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
-            canSeePlayer = false;
-        }
+        // if(healthComponent.health < enemyHealth)
+        // {
+        //     playerDetected = true;
+        // }
+        // Debug.Log(transform.forward);
     }
 
 //-----------------------------------------------Idle state----------------------------------------------//
 
     //look around for a while. If player not detected, switch to patrol state
+    private bool currentlySweeping = false;
     private IEnumerator IdleState()
     {
         //if the player hasn't been detected, do a raycast sweep in front for a number of seconds
         while(true){
             if (!playerDetected)
             {
-                StartCoroutine(DoSweep(idleSweepAngle, idleSweepRange));
-                yield return new WaitForSeconds(1f);
-                StopCoroutine(DoSweep(idleSweepAngle, idleSweepRange));
-
-                Debug.Log("in Idle state");
+                // //keep in mind that this for loop will not be broken until it is done - either find a way to not make it a for loop, or break it once the player is detected
+                // //it is that complex. refer to the phet on firefox to work out the initial and final angle - tip: physics
+                // //this somewhat does what I want  but doesn't respond correctly to my changes which means right answer wrong solution - figure out what else needs to be changed. works at 178 deg but not 90 or 45.
+                // Vector3 idleSweepInitialVector = new Vector3(idleSweepAngle, 0, idleSweepAngle);
+                // Vector3 idleSweepFinalVector = new Vector3(idleSweepAngle / 2, 0, idleSweepAngle / 2);
+                // //changing the rotation of the transform changes the height angle of the sweep, not the direction
                 
+                // //changes made to direction: using quaternion for rotation and multipying between angle X and Z - test this once done with combat
+                
+                // Vector3 sweepInitialAngle = transform.rotation * Vector3.zero;
+                // Vector3 sweepFinalAngle = transform.rotation * idleSweepFinalVector;
+                // Vector3 shotOrigin = transform.position;
+
+                // //the reason the game lags is because the raycasts still exist due to the for loop taking delta time to finish, hence it raycasts until all for loops are done, while also being in combatstate?
+                // // also, this for loop is repeated per frame, I think. not only until it's done
+                // if(!currentlySweeping){
+                //     currentlySweeping = true;
+                //     for(float t = 0f; t < idleSweepTime; t += Time.deltaTime / idleSweepTime){
+                //         RaycastHit hit;
+                //         Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t));
+
+                //         if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, idleSweepRange))
+                //         {
+                //             if(hit.transform.tag == "Player"){
+                //                 Debug.Log("Can see player");
+                //                 Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
+                //                 playerDetected = true;
+                //                 SwitchState(State.Chase);
+                //             }
+                //             else
+                //             {
+                //                 Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
+                //                 canSeePlayer = false;
+                //             }
+                //         }else
+                //         {
+                //                 Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 2, false);
+                //             canSeePlayer = false;
+                //             yield return null;
+                //         }
+                //         //yield return new WaitForSeconds(lengthOfLook / frequency);
+                //     }
+                //     currentlySweeping = false;
+                // }
+                Debug.Log("in Idle state");
             }
             else
             {
@@ -128,47 +143,6 @@ public class EnemyStateManager : MonoBehaviour
             }
             yield return null;
         }
-    }
-
-    private bool lookDelay = false;
-    //1: should I turn this into an IEnumerator so it can wait a little instead of casting a grid every frame, or should I call another IEnumerator to pause this for loop for like, 0.1 seconds
-    //2: it's looking down at an angle for some reason
-    IEnumerator DoSweep(float sweepAngle, float sweepRange, float lengthOfLook = 5)
-    {
-        //it is that complex. refer to the phet on firefox to work out the initial and final angle - tip: physics
-        //this somewhat does what I want  but doesn't respond correctly to my changes which means right answer wrong solution - figure out what else needs to be changed. works at 178 deg but not 90 or 45.
-        Vector3 angleX = new Vector3(sweepAngle, 0, 0);
-        Vector3 angleZ = new Vector3(0, 0, sweepAngle);
-        //changing the rotation of the transform changes the height angle of the sweep, not the direction
-        Vector3 sweepInitialAngle = gameObject.transform.forward - angleX + angleZ;
-        Vector3 sweepFinalAngle = gameObject.transform.forward + angleX  + angleZ;
-        Vector3 shotOrigin = transform.position;
-    
-        for(float t = 0f; t < lengthOfLook; t += Time.deltaTime / lengthOfLook){
-            RaycastHit hit;
-            Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t));
-
-            if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, sweepRange))
-            {
-                if(hit.transform.tag == "Player"){
-                    Debug.Log("Can see player");
-                    Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
-                    canSeePlayer = true;
-                }
-                else
-                {
-                    Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
-                    canSeePlayer = false;
-                }
-            }else
-            {
-                    Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 2, false);
-                canSeePlayer = false;
-                yield return null;
-            }
-            //yield return new WaitForSeconds(lengthOfLook / frequency);
-        }
-
     }
 
 //---------------------------------------- Code for look sweep ---------------------------------------------
@@ -230,6 +204,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         
         while(true){
+            LookForPlayer();
             //figure out a better place to put this
             if(hasCalledOut == false){
                 DoCallout();
@@ -265,13 +240,15 @@ public class EnemyStateManager : MonoBehaviour
         Debug.Log("I am fighting now");
 
         while(true){
+            LookForPlayer();
             transform.LookAt(player.transform);
             //ensure entire model doesn't tilt towards player during height difference
             transform.eulerAngles = new Vector3(Mathf.Clamp(transform.eulerAngles.x, 0, 0), transform.eulerAngles.y, transform.eulerAngles.z);
-            
+
             //combat testing
             while (!combatShot && canSeePlayer){
                 //wait a random amount of time before firing at player with a minimum response time of 0.3 seconds?
+                DoAttack();
                 audioManager.PlaySoundEffect(enemyWeaponFX, transform, 0.7f, 1);
                 combatShot = true;
                 //start a coroutine to move slightly in a random direction before engaging in firedelay
@@ -286,6 +263,47 @@ public class EnemyStateManager : MonoBehaviour
             //once the player is outside the maximum combat range, switch to chasing.
             
             yield return null;  
+        }
+    }
+
+    void DoAttack()
+    {
+        Vector3 shotOrigin = transform.position;
+
+        Vector3 gunSpread = Random.insideUnitCircle * combatSpreadRadius;
+        gunSpread.z = 1;
+        Vector3 shotDirection = transform.rotation * gunSpread;
+
+        //for future debugging = maybe instantialise the transform position so it can be reflected to both the ray debugger and
+        //the physics raycast - just make sure those values are the same
+        RaycastHit hit;
+        Ray ray = new Ray(shotOrigin, shotDirection);
+
+        //check for hit
+        if (Physics.Raycast(shotOrigin, shotDirection, out hit))
+        {
+            //action if hit
+            Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
+
+            //for shot trails
+            // lineRenderer = GetComponent<LineRenderer>();
+            // lineRenderer.SetPosition(0, ray.origin);
+            // lineRenderer.SetPosition(1, hit.point);
+
+            //print whatever the raycast hit to the debug log
+            Debug.Log(hit.transform.name);
+
+            //on hit, deal damage to target
+            HealthComponent target = hit.transform.GetComponent<HealthComponent>();
+            if (target != null)
+            {
+                target.TakeDamage(combatAtkDamage);
+            }
+        //action if miss
+        }else
+        {
+            Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
+            Debug.Log("miss");
         }
     }
 
@@ -308,6 +326,33 @@ public class EnemyStateManager : MonoBehaviour
         }
 
         _activeState = StartCoroutine(state);
+    }
+
+    //if I want to clamp look height so that enemies don't look straight down, I can clamp the ray angle in update
+    //how can I only call this when I need to? should I only call it in the chase and combat states?
+    void LookForPlayer()
+    {
+        RaycastHit hit;
+        directionTowardsPlayer = player.transform.position - transform.position;
+        Ray enemyVision = new Ray(transform.position, directionTowardsPlayer);
+        
+        if(Physics.Raycast(transform.position, directionTowardsPlayer, out hit, combatRange))
+        {
+            if(hit.transform.tag == "Player"){
+                Debug.Log("Can see player");
+                Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
+                canSeePlayer = true;
+            }
+            else
+            {
+                Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+                canSeePlayer = false;
+            }
+        }else
+        {
+            Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+            canSeePlayer = false;
+        }
     }
 
     private LayerMask enemyLayer = 64;
