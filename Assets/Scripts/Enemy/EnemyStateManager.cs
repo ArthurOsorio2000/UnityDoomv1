@@ -59,6 +59,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         //assign values to external Components
         gameObject.layer = 6;
+        gameObject.tag = "Enemy";
         healthComponent.health = enemyHealth;
         audioManager = AudioManager.Instance;
         enemyWeaponFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));

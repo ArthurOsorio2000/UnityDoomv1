@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 11113993}
   m_Layer: 3
   m_Name: Player Controller
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,6 +157,7 @@ MonoBehaviour:
   playerSpeed: 10
   gravityValue: -50
   playerCameraTransform: {fileID: 0}
+  playerIsDead: 0
 --- !u!4 &11113988
 Transform:
   m_ObjectHideFlags: 0
@@ -932,7 +933,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
   enemyWeaponFX: {fileID: 0}
   enemyHealth: 200
-  audibleRange: 20
+  calloutRange: 20
   idleSweepAngle: 178
   idleSweepTime: 7
   idleSweepRange: 100
@@ -1196,7 +1197,7 @@ GameObject:
   - component: {fileID: 368900140}
   - component: {fileID: 368900139}
   - component: {fileID: 368900146}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy Prototype 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1296,7 +1297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
   enemyWeaponFX: {fileID: 0}
   enemyHealth: 200
-  audibleRange: 20
+  calloutRange: 20
   idleSweepAngle: 90
   idleSweepTime: 5
   idleSweepRange: 100

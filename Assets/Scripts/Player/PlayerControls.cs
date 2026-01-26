@@ -31,6 +31,7 @@ public class PlayerControls : MonoBehaviour
         inputManager = InputManager.Instance;
         controller = GetComponent<CharacterController>();
         playerCameraTransform = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
+        gameObject.layer = 3;
         gameObject.tag = "Player";
     }
 
