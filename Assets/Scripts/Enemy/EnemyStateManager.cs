@@ -25,7 +25,7 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] private float audibleRange = 20f;
 
     [Header("Idle State Parameters")]
-    [SerializeField] private float idleSweepAngle = 40f;
+    [SerializeField] private float idleSweepAngle = 90f;
     [SerializeField] private float idleSweepTime = 7f;
     [SerializeField] private float idleSweepRange = 100f;
 
@@ -91,50 +91,55 @@ public class EnemyStateManager : MonoBehaviour
         while(true){
             if (!playerDetected)
             {
-                // //keep in mind that this for loop will not be broken until it is done - either find a way to not make it a for loop, or break it once the player is detected
-                // //it is that complex. refer to the phet on firefox to work out the initial and final angle - tip: physics
-                // //this somewhat does what I want  but doesn't respond correctly to my changes which means right answer wrong solution - figure out what else needs to be changed. works at 178 deg but not 90 or 45.
-                // Vector3 idleSweepInitialVector = new Vector3(idleSweepAngle, 0, idleSweepAngle);
-                // Vector3 idleSweepFinalVector = new Vector3(idleSweepAngle / 2, 0, idleSweepAngle / 2);
-                // //changing the rotation of the transform changes the height angle of the sweep, not the direction
-                
-                // //changes made to direction: using quaternion for rotation and multipying between angle X and Z - test this once done with combat
-                
-                // Vector3 sweepInitialAngle = transform.rotation * Vector3.zero;
-                // Vector3 sweepFinalAngle = transform.rotation * idleSweepFinalVector;
-                // Vector3 shotOrigin = transform.position;
 
-                // //the reason the game lags is because the raycasts still exist due to the for loop taking delta time to finish, hence it raycasts until all for loops are done, while also being in combatstate?
-                // // also, this for loop is repeated per frame, I think. not only until it's done
-                // if(!currentlySweeping){
-                //     currentlySweeping = true;
-                //     for(float t = 0f; t < idleSweepTime; t += Time.deltaTime / idleSweepTime){
-                //         RaycastHit hit;
-                //         Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t));
+                //the reason the game lags is because the raycasts still exist due to the for loop taking delta time to finish, hence it raycasts until all for loops are done, while also being in combatstate?
+                // also, this for loop is repeated per frame, I think. not only until it's done
+                if(!currentlySweeping){
+                    currentlySweeping = true;
 
-                //         if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, idleSweepRange))
-                //         {
-                //             if(hit.transform.tag == "Player"){
-                //                 Debug.Log("Can see player");
-                //                 Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
-                //                 playerDetected = true;
-                //                 SwitchState(State.Chase);
-                //             }
-                //             else
-                //             {
-                //                 Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
-                //                 canSeePlayer = false;
-                //             }
-                //         }else
-                //         {
-                //                 Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 2, false);
-                //             canSeePlayer = false;
-                //             yield return null;
-                //         }
-                //         //yield return new WaitForSeconds(lengthOfLook / frequency);
-                //     }
-                //     currentlySweeping = false;
-                // }
+                //keep in mind that this for loop will not be broken until it is done - either find a way to not make it a for loop, or break it once the player is detected
+                float alpha = idleSweepAngle / 2;
+                alpha = alpha * (3.14159f/180);
+                float givenX = Mathf.Sin(alpha);
+                float constZ = Mathf.Cos(alpha);
+                Vector3 idleSweepInitialVector = new Vector3(-givenX, 0, constZ);
+                Vector3 idleSweepFinalVector = new Vector3(givenX, 0, constZ);
+                //changing the rotation of the transform changes the height angle of the sweep, not the direction
+                
+                //changes made to direction: using quaternion for rotation and multipying between angle X and Z - test this once done with combat
+                Vector3 sweepInitialAngle = transform.rotation * idleSweepInitialVector;
+                Vector3 sweepFinalAngle = transform.rotation * idleSweepFinalVector;
+                Debug.Log(sweepInitialAngle);
+                Debug.Log(sweepFinalAngle);
+
+                Vector3 shotOrigin = transform.position;
+
+                    for(float t = 0f; t < idleSweepTime; t += Time.deltaTime / idleSweepTime){
+                        RaycastHit hit;
+                        Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t));
+
+                        if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, idleSweepRange))
+                        {
+                            if(hit.transform.tag == "Player"){
+                                Debug.Log("Can see player");
+                                Debug.DrawLine(ray.origin, hit.point, Color.red, 0.2f, false);
+                                //playerDetected = true;
+                                //SwitchState(State.Chase);
+                            }
+                            else
+                            {
+                                Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.2f, false);
+                                canSeePlayer = false;
+                            }
+                        }else
+                        {
+                            Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.2f, false);
+                            canSeePlayer = false;
+                            //yield return null;
+                        }
+                    }
+                    currentlySweeping = false;
+                    }
                 Debug.Log("in Idle state");
             }
             else
