@@ -838,7 +838,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &304987891
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -964,13 +964,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304987890}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.34, y: 1, z: 3.8}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.14, y: 1, z: 12.18}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!136 &304987898
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1297,8 +1297,8 @@ MonoBehaviour:
   enemyWeaponFX: {fileID: 0}
   enemyHealth: 200
   audibleRange: 20
-  idleSweepAngle: 40
-  idleSweepTime: 7
+  idleSweepAngle: 90
+  idleSweepTime: 5
   idleSweepRange: 100
   patrolSpeed: 5
   chaseSpeed: 5
@@ -2719,7 +2719,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0

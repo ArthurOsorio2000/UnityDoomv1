@@ -22,6 +22,7 @@ public class PlayerControls : MonoBehaviour
     private Vector3 playerVelocity;
     private bool groundedPlayer;
     public Transform playerCameraTransform;
+    public bool playerIsDead;
 
 
     private void Start()

@@ -27,8 +27,9 @@ public class HealthComponent : MonoBehaviour
         {
             //gameObject.SetActive(false) is a good way to reuse stuff if you're going to use it again
             //(respawning enemies or reusing bullets)
-            //Destroy(gameObeject) is a good way to save memory. depending on what you need, do either or
+            //Destroy(gameObject) is a good way to save memory. depending on what you need, do either or
             //it's like sending to graveyard vs exile I guess
+            //how to send message that player is dead?
             gameObject.SetActive(false);
             Debug.LogFormat("{0} died", gameObject.name);
         }

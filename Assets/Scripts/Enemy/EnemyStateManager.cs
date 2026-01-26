@@ -22,11 +22,11 @@ public class EnemyStateManager : MonoBehaviour
 
     [Header("Enemy Attributes")]
     [SerializeField] private float enemyHealth = 200f;
-    [SerializeField] private float audibleRange = 20f;
+    [SerializeField] private float calloutRange = 20f;
 
     [Header("Idle State Parameters")]
     [SerializeField] private float idleSweepAngle = 90f;
-    [SerializeField] private float idleSweepTime = 7f;
+    [SerializeField] private float idleSweepTime = 5f;
     [SerializeField] private float idleSweepRange = 100f;
 
     [Header("Patrol State Parameters")]
@@ -91,56 +91,49 @@ public class EnemyStateManager : MonoBehaviour
         while(true){
             if (!playerDetected)
             {
-
-                //the reason the game lags is because the raycasts still exist due to the for loop taking delta time to finish, hence it raycasts until all for loops are done, while also being in combatstate?
-                // also, this for loop is repeated per frame, I think. not only until it's done
                 if(!currentlySweeping){
                     currentlySweeping = true;
+                    //is there a function that does all this automatically?
+                    float theta = idleSweepAngle / 2;
+                    theta = theta * (3.14159f/180);
+                    float angleRight = Mathf.Sin(theta);
+                    float angleForward = Mathf.Cos(theta);
+                    //negative initial angleright for left to right sweep
+                    Vector3 idleSweepInitialVector = new Vector3(-angleRight, 0, angleForward);
+                    Vector3 idleSweepFinalVector = new Vector3(angleRight, 0, angleForward);
 
-                //keep in mind that this for loop will not be broken until it is done - either find a way to not make it a for loop, or break it once the player is detected
-                float alpha = idleSweepAngle / 2;
-                alpha = alpha * (3.14159f/180);
-                float givenX = Mathf.Sin(alpha);
-                float constZ = Mathf.Cos(alpha);
-                Vector3 idleSweepInitialVector = new Vector3(-givenX, 0, constZ);
-                Vector3 idleSweepFinalVector = new Vector3(givenX, 0, constZ);
-                //changing the rotation of the transform changes the height angle of the sweep, not the direction
-                
-                //changes made to direction: using quaternion for rotation and multipying between angle X and Z - test this once done with combat
-                Vector3 sweepInitialAngle = transform.rotation * idleSweepInitialVector;
-                Vector3 sweepFinalAngle = transform.rotation * idleSweepFinalVector;
-                Debug.Log(sweepInitialAngle);
-                Debug.Log(sweepFinalAngle);
+                    Vector3 sweepInitialDirection = transform.rotation * idleSweepInitialVector;
+                    Vector3 sweepFinalDirection = transform.rotation * idleSweepFinalVector;
 
-                Vector3 shotOrigin = transform.position;
-
-                    for(float t = 0f; t < idleSweepTime; t += Time.deltaTime / idleSweepTime){
+                    Vector3 shotOrigin = transform.position;
+                    //divide a wait into the amount of times it'll take the for loop to loop vs the idlesweep time then stick it into the end of the for loop?
+                    for(float t = 0f; t < 1; t += Time.deltaTime / idleSweepTime){
                         RaycastHit hit;
-                        Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t));
+                        Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialDirection, sweepFinalDirection, t));
 
-                        if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialAngle, sweepFinalAngle, t), out hit, idleSweepRange))
+                        if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialDirection, sweepFinalDirection, t), out hit, idleSweepRange))
                         {
-                            if(hit.transform.tag == "Player"){
+                            if(hit.transform.tag == "Player" || playerDetected){
                                 Debug.Log("Can see player");
-                                Debug.DrawLine(ray.origin, hit.point, Color.red, 0.2f, false);
-                                //playerDetected = true;
-                                //SwitchState(State.Chase);
+                                //Debug.DrawLine(ray.origin, hit.point, Color.red, 0.1f, false);
+                                playerDetected = true;
+                                SwitchState(State.Chase);
+                                yield break;
                             }
                             else
                             {
-                                Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.2f, false);
+                                Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
                                 canSeePlayer = false;
                             }
                         }else
                         {
-                            Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.2f, false);
+                            Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
                             canSeePlayer = false;
-                            //yield return null;
                         }
+                        yield return new WaitForSeconds(Time.deltaTime / idleSweepTime);
                     }
-                    currentlySweeping = false;
-                    }
-                Debug.Log("in Idle state");
+                currentlySweeping = false;
+                }
             }
             else
             {
@@ -150,50 +143,12 @@ public class EnemyStateManager : MonoBehaviour
         }
     }
 
-//---------------------------------------- Code for look sweep ---------------------------------------------
-//     //should looking be a separate state? like, sweep state where the enemy sweeps an area to look around?
-//     //then switches to partrol state which raycasts around to check for a direction, then walks in that direction?
-//     //so that during combat, when enemies have lost sight of the player for a number of seconds, they can enter sweep state?
-//     IEnumerator IdleLook(EnemyStateManager enemy, float lookTime, float lookLength = 3f, float lookRadius = 179f)
-//     {
-//         lookRadius = lookRadius / 2; // <-- randomise the initial orientation with a random seed generated by each instance of the enemy class so the initial direction is unique for each instance
-//         //variable for looking to one side
-//         float firstLook = lookLength / 6;
-//         //covering distance from the first side to the second side
-//         float secondLook = firstLook * 2;        
-
-//         //if enemy is shot at - stop these coroutines, then stop the partrol look coroutine in Enterstate and shift to combatstate
-//         //can you nest these coroutines in itself recursively?
-//         lookCoroutine = SweepArea(enemy, firstLook, lookRadius);
-//         enemy.StartCoroutine(lookCoroutine);
-//         yield return new WaitForSeconds(lookTime);
-//         lookCoroutine = SweepArea(enemy, secondLook, -lookRadius * 2);
-//         enemy.StartCoroutine(lookCoroutine);
-//         yield return new WaitForSeconds(lookTime);
-//         lookCoroutine = SweepArea(enemy, firstLook, lookRadius);
-//         enemy.StartCoroutine(lookCoroutine);
-
-//     }
-
-//     IEnumerator SweepArea(EnemyStateManager enemy, float turnLength = 3f, float lookRadius = 179f, float lookLength = 1)
-//     {
-//         //first look
-
-//         Vector3 byAngles = new Vector3(0f, lookRadius, 0f);
-//         Quaternion fromAngle = enemy.transform.rotation;
-//         Quaternion toAngle = Quaternion.Euler(enemy.transform.eulerAngles + byAngles);
-//         for(var t = 0f; t < 1; t += Time.deltaTime / turnLength)
-//         {
-//             enemy.transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
-//             yield return null;
-//         }
-//     }
-
 //-----------------------------------------------patrol state----------------------------------------------//
     //pathfind randomly.
     //will work on later
     public IEnumerator PatrolState()
     {
+        navAgent.speed = patrolSpeed;
         //choose a random spot to walk to? or choose a random spot to walk towards and idle?
         while(true){
             Debug.Log("in patrol state");
@@ -201,13 +156,18 @@ public class EnemyStateManager : MonoBehaviour
         }
     }
 
+//-----------------------------------------------Surprise state----------------------------------------------//
+//if the player hasn't been detected and playerDetected is toggled, enter this mode, play a surprise animation and wait a random amount of time (reactiontime?)
+//before entering chase to give player enough time to react to detection
+
+
 //-----------------------------------------------Chase state----------------------------------------------//
 
     private bool canTrack = true;
     private bool hasCalledOut = false;
     private IEnumerator ChaseState()
     {
-        
+        navAgent.speed = chaseSpeed;
         while(true){
             LookForPlayer();
             //figure out a better place to put this
@@ -287,8 +247,7 @@ public class EnemyStateManager : MonoBehaviour
         //check for hit
         if (Physics.Raycast(shotOrigin, shotDirection, out hit))
         {
-            //action if hit
-            Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
+            //Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
 
             //for shot trails
             // lineRenderer = GetComponent<LineRenderer>();
@@ -324,7 +283,7 @@ public class EnemyStateManager : MonoBehaviour
             case State.Chase : state = ChaseState(); break;
             case State.Combat : state = CombatState(); break;
         }
-       
+
        if(_activeState != null)
         {
             StopCoroutine(_activeState);
@@ -360,13 +319,14 @@ public class EnemyStateManager : MonoBehaviour
         }
     }
 
-    private LayerMask enemyLayer = 64;
+    private LayerMask allies = 64; // <-- 6: enemy layer
     private Collider[] enemiesInEarshot;
     private void DoCallout()
     {
+        //play a callout sound ("There he is!" or something) - if surprisestate is implemented, stick this in there, too.
         //get list of enemies in earshot and toggle them to detect player and chase
         //bug - enemy layer doesn't work
-        enemiesInEarshot = Physics.OverlapSphere(transform.position, audibleRange, enemyLayer);
+        enemiesInEarshot = Physics.OverlapSphere(transform.position, calloutRange, allies);
         foreach (Collider enemyInEarshot in enemiesInEarshot)
         {
             print("alerted friend: " + enemyInEarshot.gameObject.name);

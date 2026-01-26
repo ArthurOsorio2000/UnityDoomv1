@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
         //instantiate playercontrols compoenent onto the attached object <-- how would I do this? playercontrols is on
         //a playercontroller object, while the player is a holder for the entire model. Would this be on the same game
         //object as the player controller?
-        playerHealthComponent.health = 200;
+        playerHealthComponent.health = 99999;
         //also instantiate and edit the initial health of a health component
         //gameObject.tag = "Player";
     }
