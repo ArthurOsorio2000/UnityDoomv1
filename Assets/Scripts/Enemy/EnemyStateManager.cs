@@ -18,16 +18,20 @@ public class EnemyStateManager : MonoBehaviour
     [System.Serializable] public enum State {Idle, Patrol, Chase, Combat};
 
     [Header("SFX")]
-    [SerializeField] private AudioClip enemyWeaponFX;
+    [SerializeField] protected AudioClip enemyWeaponFX;
+    [SerializeField] protected AudioClip enemyCallout1;
+    [SerializeField] protected AudioClip enemyCallout2;
+    [SerializeField] protected AudioClip enemyCallout3;
+    List<AudioClip> calloutList = new List<AudioClip>();
 
     [Header("Enemy Attributes")]
-    [SerializeField] private float enemyHealth = 200f;
-    [SerializeField] private float calloutRange = 20f;
+    [SerializeField] protected float enemyHealth = 200f;
+    [SerializeField] protected float calloutRange = 20f;
 
     [Header("Idle State Parameters")]
-    [SerializeField] private float idleSweepAngle = 90f;
-    [SerializeField] private float idleSweepTime = 5f;
-    [SerializeField] private float idleSweepRange = 100f;
+    [SerializeField] protected float idleSweepAngle = 90f;
+    [SerializeField] protected float idleSweepTime = 5f;
+    [SerializeField] protected float idleSweepRange = 100f;
 
     [Header("Patrol State Parameters")]
     [SerializeField] private float patrolSpeed = 5f;
@@ -41,13 +45,16 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] [Tooltip("Must be a value between 0 and 1.")] private float combatSpreadRadius = 0f;
 
      [Header("Debug Fields")]
-    [SerializeField] private bool canSeePlayer;
-    [field: SerializeField] private bool playerDetected {get; set;}
+    [SerializeField] protected bool canSeePlayer;
+    [field: SerializeField] protected bool playerDetected {get; set;}
 
     //variables for finding GameObject with player mesh
     private GameObject[] playerList;
     private GameObject player;
     private Vector3 directionTowardsPlayer;
+
+    //States:
+    private EnemyIdleState idleState;
 
     void Awake()
     {
@@ -57,12 +64,20 @@ public class EnemyStateManager : MonoBehaviour
 
     void Start()
     {
+        //assign states to state variables
+        idleState = new EnemyIdleState();
         //assign values to external Components
         gameObject.layer = 6;
         gameObject.tag = "Enemy";
         healthComponent.health = enemyHealth;
         audioManager = AudioManager.Instance;
         enemyWeaponFX = (AudioClip) Resources.Load("Sounds/Weapon Sounds/DoomPistol", typeof(AudioClip));
+        enemyCallout1 = (AudioClip) Resources.Load("Sounds/Enemy Sounds/Zombieman Sounds/zombiemancallout1", typeof(AudioClip));
+        enemyCallout2 = (AudioClip) Resources.Load("Sounds/Enemy Sounds/Zombieman Sounds/zombiemancallout2", typeof(AudioClip));
+        enemyCallout3 = (AudioClip) Resources.Load("Sounds/Enemy Sounds/Zombieman Sounds/zombiemancallout3", typeof(AudioClip));
+        calloutList.Add(enemyCallout1);
+        calloutList.Add(enemyCallout2);
+        calloutList.Add(enemyCallout3);
         playerList = GameObject.FindGameObjectsWithTag("Player");
         if (playerList != null){
            player = playerList[0];
@@ -80,6 +95,8 @@ public class EnemyStateManager : MonoBehaviour
         //     playerDetected = true;
         // }
         // Debug.Log(transform.forward);
+
+        //if current health is less than previous health and currently not playing pain sound, play pain sound?
     }
 
 //-----------------------------------------------Idle state----------------------------------------------//
@@ -90,58 +107,60 @@ public class EnemyStateManager : MonoBehaviour
     {
         //if the player hasn't been detected, do a raycast sweep in front for a number of seconds
         while(true){
-            if (!playerDetected)
-            {
-                if(!currentlySweeping){
-                    currentlySweeping = true;
-                    //is there a function that does all this automatically?
-                    float theta = idleSweepAngle / 2;
-                    theta = theta * (3.14159f/180);
-                    float angleRight = Mathf.Sin(theta);
-                    float angleForward = Mathf.Cos(theta);
-                    //negative initial angleright for left to right sweep
-                    Vector3 idleSweepInitialVector = new Vector3(-angleRight, 0, angleForward);
-                    Vector3 idleSweepFinalVector = new Vector3(angleRight, 0, angleForward);
+            if(!currentlySweeping){
+                currentlySweeping = true;
+                //is there a function that does all this automatically?
+                float theta = idleSweepAngle / 2;
+                theta = theta * (3.14159f/180);
+                float angleRight = Mathf.Sin(theta);
+                float angleForward = Mathf.Cos(theta);
 
-                    Vector3 sweepInitialDirection = transform.rotation * idleSweepInitialVector;
-                    Vector3 sweepFinalDirection = transform.rotation * idleSweepFinalVector;
+                //negative initial angleright for left to right sweep
+                Vector3 idleSweepInitialVector = new Vector3(-angleRight, 0, angleForward);
+                Vector3 idleSweepFinalVector = new Vector3(angleRight, 0, angleForward);
 
-                    Vector3 shotOrigin = transform.position;
-                    //divide a wait into the amount of times it'll take the for loop to loop vs the idlesweep time then stick it into the end of the for loop?
-                    for(float t = 0f; t < 1; t += Time.deltaTime / idleSweepTime){
-                        RaycastHit hit;
-                        Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialDirection, sweepFinalDirection, t));
+                Vector3 sweepInitialDirection = transform.rotation * idleSweepInitialVector;
+                Vector3 sweepFinalDirection = transform.rotation * idleSweepFinalVector;
 
-                        if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialDirection, sweepFinalDirection, t), out hit, idleSweepRange))
+                Vector3 shotOrigin = transform.position;
+                //divide a wait into the amount of times it'll take the for loop to loop vs the idlesweep time then stick it into the end of the for loop?
+                for(float t = 0f; t < 1; t += Time.deltaTime / idleSweepTime){
+                    RaycastHit hit;
+                    Ray ray = new Ray(shotOrigin, Vector3.Slerp(sweepInitialDirection, sweepFinalDirection, t));
+
+                    if(Physics.Raycast(shotOrigin, Vector3.Slerp(sweepInitialDirection, sweepFinalDirection, t), out hit, idleSweepRange))
+                    {
+                        if(hit.transform.tag == "Player"){
+                            IdleDetectPlayerAction();
+                        }
+                        else
                         {
-                            if(hit.transform.tag == "Player" || playerDetected){
-                                Debug.Log("Can see player");
-                                //Debug.DrawLine(ray.origin, hit.point, Color.red, 0.1f, false);
-                                playerDetected = true;
-                                SwitchState(State.Chase);
-                                yield break;
-                            }
-                            else
-                            {
-                                Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
-                                canSeePlayer = false;
-                            }
-                        }else
-                        {
-                            Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
+                            Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
                             canSeePlayer = false;
                         }
-                        yield return new WaitForSeconds(Time.deltaTime / idleSweepTime);
+                    }else
+                    {
+                        Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
+                        canSeePlayer = false;
                     }
-                currentlySweeping = false;
+                    if(playerDetected)
+                    {
+                        IdleDetectPlayerAction();
+                    }
+                    yield return new WaitForSeconds(Time.deltaTime / idleSweepTime);
                 }
-            }
-            else
-            {
-                SwitchState(State.Chase);
+            currentlySweeping = false;
             }
             yield return null;
         }
+    }
+
+    void IdleDetectPlayerAction()
+    {
+        Debug.Log("Can see player");
+        //Debug.DrawLine(ray.origin, hit.point, Color.red, 0.1f, false);
+        playerDetected = true;
+        SwitchState(State.Chase);
     }
 
 //-----------------------------------------------patrol state----------------------------------------------//
@@ -172,8 +191,9 @@ public class EnemyStateManager : MonoBehaviour
         while(true){
             LookForPlayer();
             //figure out a better place to put this
-            if(hasCalledOut == false){
+            if(!hasCalledOut){
                 DoCallout();
+                hasCalledOut = true;
             }
             //error prevention to disable navagent on death
             if(canTrack){
@@ -222,7 +242,6 @@ public class EnemyStateManager : MonoBehaviour
             }
             if (Vector3.Distance(transform.position, player.transform.position) > combatRange || !canSeePlayer)
             {
-                hasCalledOut = false;
                 SwitchState(State.Chase);
             }
             //once the player is within a certain range of the player, start combat.
@@ -279,7 +298,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         IEnumerator state = null;
         switch(destinationState) {
-            case State.Idle : state = IdleState(); break;
+            case State.Idle : state = idleState.PerformIdleState(); break;
             case State.Patrol : state = PatrolState(); break;
             case State.Chase : state = ChaseState(); break;
             case State.Combat : state = CombatState(); break;
@@ -324,6 +343,7 @@ public class EnemyStateManager : MonoBehaviour
     private Collider[] enemiesInEarshot;
     private void DoCallout()
     {
+        audioManager.PlaySoundEffect(calloutList[Random.Range(0, 2)], transform, 0.7f, 1);
         //play a callout sound ("There he is!" or something) - if surprisestate is implemented, stick this in there, too.
         //get list of enemies in earshot and toggle them to detect player and chase
         //bug - enemy layer doesn't work

@@ -14,6 +14,12 @@ public class HealthComponent : MonoBehaviour
     //the health variable with the intended health, to be further overriden as a SerializeField in-editor?
     [field: SerializeField] public float health {get; set;} = 50f;
 
+
+    void Start()
+    {
+
+    }
+
     public void TakeDamage (float amount)
         {
             health -= amount;
