@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4492861297458018991}
   - component: {fileID: 2561946972308581987}
   m_Layer: 6
-  m_Name: Enemy Prototype 2
+  m_Name: Enemy Prototype
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

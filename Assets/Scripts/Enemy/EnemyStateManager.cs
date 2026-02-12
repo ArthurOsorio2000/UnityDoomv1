@@ -298,7 +298,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         IEnumerator state = null;
         switch(destinationState) {
-            case State.Idle : state = idleState.PerformIdleState(); break;
+            case State.Idle : state = IdleState(); break;
             case State.Patrol : state = PatrolState(); break;
             case State.Chase : state = ChaseState(); break;
             case State.Combat : state = CombatState(); break;
