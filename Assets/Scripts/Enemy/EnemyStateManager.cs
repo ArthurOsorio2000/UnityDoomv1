@@ -65,7 +65,7 @@ public class EnemyStateManager : MonoBehaviour
     void Start()
     {
         //assign states to state variables
-        idleState = new EnemyIdleState();
+        //idleState = new EnemyIdleState();
         //assign values to external Components
         gameObject.layer = 6;
         gameObject.tag = "Enemy";
@@ -135,12 +135,12 @@ public class EnemyStateManager : MonoBehaviour
                         }
                         else
                         {
-                            Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
+                            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
                             canSeePlayer = false;
                         }
                     }else
                     {
-                        Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
+                        //Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
                         canSeePlayer = false;
                     }
                     if(playerDetected)
@@ -286,7 +286,7 @@ public class EnemyStateManager : MonoBehaviour
         //action if miss
         }else
         {
-            Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
+            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
             Debug.Log("miss");
         }
     }
@@ -324,17 +324,17 @@ public class EnemyStateManager : MonoBehaviour
         {
             if(hit.transform.tag == "Player"){
                 Debug.Log("Can see player");
-                Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
+                //Debug.DrawLine(enemyVision.origin, hit.point, Color.red, 2, false);
                 canSeePlayer = true;
             }
             else
             {
-                Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+                //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
                 canSeePlayer = false;
             }
         }else
         {
-            Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
+            //Debug.DrawLine(enemyVision.origin, enemyVision.origin + enemyVision.direction * 100, Color.blue, 2, false);
             canSeePlayer = false;
         }
     }

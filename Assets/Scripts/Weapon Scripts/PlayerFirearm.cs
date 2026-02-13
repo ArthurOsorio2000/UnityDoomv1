@@ -108,7 +108,7 @@ public abstract class PlayerFirearm : MonoBehaviour
         if (Physics.Raycast(shotOrigin, shotDirection, out hit, range))
         {
             //action if hit
-            Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
+            //Debug.DrawLine(ray.origin, hit.point, Color.red, 2, false);
 
             //for shot trails
             // lineRenderer = GetComponent<LineRenderer>();
@@ -127,7 +127,7 @@ public abstract class PlayerFirearm : MonoBehaviour
         //action if miss
         }else
         {
-            Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
+            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 2, false);
         }
     }
 
