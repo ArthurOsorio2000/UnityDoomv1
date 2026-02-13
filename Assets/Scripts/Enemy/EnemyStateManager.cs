@@ -135,12 +135,12 @@ public class EnemyStateManager : MonoBehaviour
                         }
                         else
                         {
-                            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
+                            Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
                             canSeePlayer = false;
                         }
                     }else
                     {
-                        //Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
+                        Debug.DrawLine(shotOrigin, ray.origin + ray.direction * 100, Color.blue, 0.1f, false);
                         canSeePlayer = false;
                     }
                     if(playerDetected)
@@ -235,7 +235,7 @@ public class EnemyStateManager : MonoBehaviour
             while (!combatShot && canSeePlayer){
                 //wait a random amount of time before firing at player with a minimum response time of 0.3 seconds?
                 DoAttack();
-                audioManager.PlaySoundEffect(enemyWeaponFX, transform, 0.7f, 1);
+                audioManager.PlaySoundEffect(enemyWeaponFX, transform, 0.5f, 1);
                 combatShot = true;
                 //start a coroutine to move slightly in a random direction before engaging in firedelay
                 StartCoroutine(FireDelay(Random.Range(1f, 1.5f)));

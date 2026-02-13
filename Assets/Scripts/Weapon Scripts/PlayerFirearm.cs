@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public abstract class PlayerFirearm : MonoBehaviour
@@ -64,8 +63,7 @@ public abstract class PlayerFirearm : MonoBehaviour
     public virtual void Shoot(AudioClip fireFX, float damage, float range, float spreadRadius, float rateOfFire, float audibleRange, int bulletsPerShot = 1)
     {
         if (canFire){
-            audioManager.PlaySoundEffect(fireFX, transform, 1f, 0);
-
+            audioManager.PlaySoundEffect(fireFX, transform, 0.2f, 0);
             //get list of enemies in earshot and toggle them to detect player and chase
             //bug - enemy layer doesn't work
             enemiesInEarshot = Physics.OverlapSphere(transform.position, audibleRange, enemyLayer);
