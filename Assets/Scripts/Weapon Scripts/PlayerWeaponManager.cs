@@ -18,6 +18,11 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
         //assign common components
         inputManager = InputManager.Instance;
+
+        //how to add weapons to player? automatically add pistol to inventory
+        //upon picking up weapon pickups, append this to the weapons list?
+        //or have these weapons already in the player's inventory, but the buttons
+        //only activate 
         EquipDefaultWeapon();
         weapons[0].SetActive(true);
     }
@@ -29,7 +34,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
         EquipHangun();
         EquipAssaultRifle();
         EquipShotgun();
-        
     }
 
     //list of currently equipped weapons.
@@ -93,4 +97,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
                 currentWeapon = selectedWeapon;
             }
     }
+
+    //add method to add or remove weapons from player
 }

@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyStateManager : MonoBehaviour
+public class EnemyStateManager : MonoBehaviour, IDamagable
 {
     //components
     private HealthComponent healthComponent;
@@ -257,6 +257,8 @@ public class EnemyStateManager : MonoBehaviour
 
         Vector3 gunSpread = Random.insideUnitCircle * combatSpreadRadius;
         gunSpread.z = 1;
+        //right here is the reason the enemy doesn't do damage to the player on an angle - it is because it takes the transform rotation instead of firing using the raycast cast
+        //to look directly at the player. replace this with the player tracking code - or find a way to implement it without repeating it.
         Vector3 shotDirection = transform.rotation * gunSpread;
 
         //for future debugging = maybe instantialise the transform position so it can be reflected to both the ray debugger and
@@ -278,10 +280,9 @@ public class EnemyStateManager : MonoBehaviour
             Debug.Log(hit.transform.name);
 
             //on hit, deal damage to target
-            HealthComponent target = hit.transform.GetComponent<HealthComponent>();
-            if (target != null)
-            {
-                target.TakeDamage(combatAtkDamage);
+            IDamagable damagable = hit.collider.GetComponent<IDamagable>();
+            if(damagable != null){
+                damagable.Damage(combatAtkDamage);
             }
         //action if miss
         }else
@@ -376,5 +377,12 @@ public class EnemyStateManager : MonoBehaviour
     public void HearPlayer (bool heardPlayer)
     {
         playerDetected = heardPlayer;
+    }
+
+//-----------------------------------------------Interface responses----------------------------------------------//
+
+    public void Damage(float damageAmount)
+    {
+        healthComponent.TakeDamage(damageAmount);
     }
 }

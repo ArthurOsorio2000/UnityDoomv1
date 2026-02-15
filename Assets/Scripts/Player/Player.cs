@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(HealthComponent))]
 [RequireComponent(typeof(PlayerControls))]
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamagable
 {
     public HealthComponent playerHealthComponent;
     public PlayerControls playerControls;
@@ -39,5 +39,12 @@ public class Player : MonoBehaviour
     void Update()
     {
         
+    }
+
+    //-----------------------------------------------Interface responses----------------------------------------------//
+
+    public void Damage(float damageAmount)
+    {
+        playerHealthComponent.TakeDamage(damageAmount);
     }
 }

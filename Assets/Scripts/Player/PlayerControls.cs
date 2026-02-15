@@ -29,8 +29,9 @@ public class PlayerControls : MonoBehaviour
     {
         PlayerControlsSingletonCheck();
         inputManager = InputManager.Instance;
+        
         controller = GetComponent<CharacterController>();
-        playerCameraTransform = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
+        playerCameraTransform = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>(); //now that I've imported the camera, is tracking this transform worth it?
         gameObject.layer = 3;
         gameObject.tag = "Player";
     }

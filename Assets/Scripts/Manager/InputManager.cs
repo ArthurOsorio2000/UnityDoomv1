@@ -54,6 +54,10 @@ public class InputManager : MonoBehaviour
         return playerControls.Player.Look.ReadValue<Vector2>();
     }
 
+    public bool PlayerInteract()
+    {
+        return playerControls.Player.Interact.triggered;
+    }
 
     //note to self - difference between triggered and IsPressed:
     //how do I make this efficient? how do I make sure hold shot isn't active when single shot is active?

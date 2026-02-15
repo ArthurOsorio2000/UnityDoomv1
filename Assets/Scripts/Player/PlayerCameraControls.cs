@@ -38,5 +38,24 @@ public class PlayerCameraControls : MonoBehaviour
         _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
 
         transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+        PlayerInteract();
+    }
+
+    void PlayerInteract()
+    {
+        if (inputManager.PlayerInteract())
+        {
+            //fire a raycast - if the hit is a gameobject interactable, call it's interact function
+            Vector3 shotOrigin = transform.position;
+            Vector3 shotDirection = transform.forward;
+
+            RaycastHit  hitInfo;
+            if (Physics.Raycast(shotOrigin, shotDirection, out hitInfo, 2f)){
+                IInteractable interactable = hitInfo.collider.GetComponent<IInteractable>();
+                if(interactable != null){
+                    interactable.Interact();
+                }
+            }
+        }
     }
 }

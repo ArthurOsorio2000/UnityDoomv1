@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 71497108}
   - component: {fileID: 71497107}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: NorthWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2222,6 +2222,7 @@ GameObject:
   - component: {fileID: 356638394}
   - component: {fileID: 356638393}
   - component: {fileID: 356638392}
+  - component: {fileID: 356638395}
   m_Layer: 0
   m_Name: PickupTest
   m_TagString: Untagged
@@ -2322,6 +2323,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356638390}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &356638395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356638390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae6a578bfce92944b88a2f1c941c0773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShotgunPickup
 --- !u!1 &359587565
 GameObject:
   m_ObjectHideFlags: 0
@@ -4742,7 +4755,7 @@ GameObject:
   - component: {fileID: 696464068}
   - component: {fileID: 696464067}
   m_Layer: 0
-  m_Name: WaterCeiling (1)
+  m_Name: CorridorCeiling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5669,7 +5682,7 @@ GameObject:
   - component: {fileID: 953677194}
   - component: {fileID: 953677193}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: LeftDoorPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8618,7 +8631,7 @@ GameObject:
   - component: {fileID: 1526247101}
   - component: {fileID: 1526247100}
   m_Layer: 0
-  m_Name: Cube (4)
+  m_Name: DoorRightSlant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10909,7 +10922,7 @@ GameObject:
   - component: {fileID: 1809818292}
   - component: {fileID: 1809818291}
   m_Layer: 0
-  m_Name: WaterCeiling (2)
+  m_Name: TopDoorWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11139,7 +11152,7 @@ GameObject:
   - component: {fileID: 1842759270}
   - component: {fileID: 1842759269}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: RightDoorPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11251,7 +11264,7 @@ GameObject:
   - component: {fileID: 1909119829}
   - component: {fileID: 1909119828}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: SouthWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

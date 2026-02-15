@@ -116,11 +116,9 @@ public abstract class PlayerFirearm : MonoBehaviour
             //print whatever the raycast hit to the debug log
             Debug.Log(hit.transform.name);
 
-            //on hit, deal damage to target
-            HealthComponent target = hit.transform.GetComponent<HealthComponent>();
-            if (target != null)
-            {
-                target.TakeDamage(damage);
+            IDamagable damagable = hit.collider.GetComponent<IDamagable>();
+            if(damagable != null){
+                damagable.Damage(damage);
             }
         //action if miss
         }else
