@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class NewMonoBehaviourScript : MonoBehaviour
@@ -5,24 +8,57 @@ public class NewMonoBehaviourScript : MonoBehaviour
     protected Camera playerCamera;
     [SerializeField] private int currentWeapon;
 
-    //note: this holds all weapons. if you want a fixed spot for them, import them and sort them based on an id?
-    //for dynamic pickup populate based on other factors like slot availability or queue recency
+    //note: old weapon inventory
     [SerializeField] private GameObject[] weapons;
+
+    //private prefabs of weapons to go into playerWeaponInventory
+    [SerializeField] private GameObject playerHandgun;
+    [SerializeField] private GameObject playerAssaultRifle;
+    [SerializeField] private GameObject playerShotgun;
+    
+    /**note: new - this holds all the weapons. How do you populate this hashtable with PlayerFirearm objects
+    then attach the correct correlating initial components (Handgun, AssaultRifle, Shotgun etc.) to the
+    game object?**/
+    [SerializeField] private Hashtable playerWeaponInventory = new Hashtable();
     [SerializeField] private InputManager inputManager;
+
+    void Awake()
+    {
+        //create gameobjects and add correlating components - is there a way to reduce playerfirearm assignments?
+        //for all objects in hashtable, addcomponent playerfirearm?
+        playerHandgun.AddComponent<PlayerFirearm>();
+        playerAssaultRifle.AddComponent<PlayerFirearm>();
+        playerShotgun.AddComponent<PlayerFirearm>();
+
+        playerHandgun.AddComponent<Handgun>();
+        playerAssaultRifle.AddComponent<AssaultRifle>();
+        playerShotgun.AddComponent<Shotgun>();
+
+
+        //instantiate player weapons
+        Instantiate(playerHandgun, new Vector3(0, 0, 0), Quaternion.Identity);
+        Instantiate(playerAssaultRifle, new Vector3(0, 0, 0), Quaternion.Identity);
+        Instantiate(playerShotgun, new Vector3(0, 0, 0), Quaternion.Identity);
+
+        //add player weapons to weapon inventory hashtable
+        playerWeaponInventory.Add("PlayerHandgun", playerHandgun);
+        playerWeaponInventory.Add("PlayerAssaultRifle", playerAssaultRifle);
+        playerWeaponInventory.Add("PlayerShotgun", playerShotgun);
+    }
+
     void Start()
     {
+        //assign common components
+        inputManager = InputManager.Instance;
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
+        //<old> go through each object in array and set SetActive to false.
+        // - this array is filled prior to Start
         foreach (GameObject weapon in weapons)
         {
             weapon.SetActive(false);
         }
-        //assign common components
-        inputManager = InputManager.Instance;
 
-        //how to add weapons to player? automatically add pistol to inventory
-        //upon picking up weapon pickups, append this to the weapons list?
-        //or have these weapons already in the player's inventory, but the buttons
-        //only activate 
         EquipDefaultWeapon();
         weapons[0].SetActive(true);
     }
@@ -31,33 +67,11 @@ public class NewMonoBehaviourScript : MonoBehaviour
     void Update()
     {
         transform.rotation = playerCamera.transform.rotation;
+        //constantly track player inputs
         EquipHangun();
         EquipAssaultRifle();
         EquipShotgun();
     }
-
-    //list of currently equipped weapons.
-    //if the player has not yet acquired the weapon - the player cannot use it
-
-    //once the player has the weapon and it is not currently equipped, stow the
-    //currently equipped weapon and unhide the selected one
-
-    //for testing - for now, let's assume the player currently has both the handgun and assaultrifle
-
-    //will each gun gameobject have a script, and when their input action get command is called,
-    //they activate a method within this manager to activate itself?
-    //no, but what if they aren't activated?
-    //this means the behaviours of each gun are defined in their objects, but the equipping and unequipping
-    //(loading and deloading) are done here?
-
-    //using a switch isn't going to work as it takes an input. should something in update be constantly
-    //polling to see if I've pressed any weapon select buttons?
-
-    //if the handgun's been pressed (and is in inventory) - deload everything and load handgun?
-    //if the assault rifle's been pressed - deload everything and load ar?
-    //1: check for weapon and note down index in list - and check if isAquired
-    //2. deload all weapons(?) or deload currently loaded weapon?
-    //3. load selected weapon
 
     void EquipDefaultWeapon()
     {
@@ -90,13 +104,17 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     void SwapWeapon(int selectedWeapon)
     {
-        if(selectedWeapon != currentWeapon) //here, when implemented, also check if the weapon has been collected, yet
-            {
-                weapons[currentWeapon].SetActive(false);
-                weapons[selectedWeapon].SetActive(true);
-                currentWeapon = selectedWeapon;
-            }
+        if(selectedWeapon.inInventory){
+            if(selectedWeapon != currentWeapon) //here, when implemented, also check if the weapon has been collected, yet
+                {
+                    weapons[currentWeapon].SetActive(false);
+                    weapons[selectedWeapon].SetActive(true);
+                    currentWeapon = selectedWeapon;
+                }
+        }
+        else
+        {
+            Debug.Log("Weapon not currently in inventory");
+        }
     }
-
-    //add method to add or remove weapons from player
 }

@@ -9,7 +9,9 @@ public abstract class PlayerFirearm : MonoBehaviour
     //all the things that need to be changed by the inheriting weapons
     [Header("SFX")]
     [SerializeField] protected AudioClip fireFX;
+
     [Header("Weapon Attributes")]
+    [SerializeField] protected bool inInventory = false;
     [SerializeField] protected float damage;
     [SerializeField] protected float range;
     [SerializeField] protected float spreadRadius;
@@ -26,7 +28,6 @@ public abstract class PlayerFirearm : MonoBehaviour
     protected LayerMask enemyLayer = 64;
     protected Collider[] enemiesInEarshot;
 
-    
     //if I want to add shot trails
     //protected LineRenderer lineRenderer;
 
@@ -40,9 +41,15 @@ public abstract class PlayerFirearm : MonoBehaviour
         audioManager = AudioManager.Instance;
     }
 
+    //if this isn't stated - if weapon is disabled while canFire is disabled, weapon will not fire
     void OnEnable()
     {
         canFire = true;
+    }
+
+    void AddToInventory()
+    {
+        inInventory = true;
     }
 
     // Update is called once per frame
@@ -51,15 +58,13 @@ public abstract class PlayerFirearm : MonoBehaviour
         UpdateWeapon();
     }
     
-    //if player isn't moving, I can either remove spread or make it 0?
-    protected bool canFire = true;
-
-    //to visualise audio range
+    //debug: to visualise audio range
     void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, audibleRange);
     }
 
+    protected bool canFire = true;
     public virtual void Shoot(AudioClip fireFX, float damage, float range, float spreadRadius, float rateOfFire, float audibleRange, int bulletsPerShot = 1)
     {
         if (canFire){
@@ -71,7 +76,7 @@ public abstract class PlayerFirearm : MonoBehaviour
             {
                 print("enemy heard: " + enemyInEarshot.gameObject.name);
                 EnemyStateManager enemy = enemyInEarshot.GetComponent<EnemyStateManager>();
-                
+
                 if (enemy != null)
                 {
                     enemy.HearPlayer(true);
