@@ -2459,6 +2459,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Object
       objectReference: {fileID: 0}
+    - target: {fileID: 6395901104893560327, guid: 34dd221d7e4fc35419c2d41c4c9b18d3, type: 3}
+      propertyPath: playerHandgun
+      value: 
+      objectReference: {fileID: 1320225083372691380, guid: 7af8b7b433df76b4fb030e1fc4889839, type: 3}
+    - target: {fileID: 6395901104893560327, guid: 34dd221d7e4fc35419c2d41c4c9b18d3, type: 3}
+      propertyPath: playerShotgun
+      value: 
+      objectReference: {fileID: 4315572627318229537, guid: f7870cc383462294090e034d382b05f4, type: 3}
+    - target: {fileID: 6395901104893560327, guid: 34dd221d7e4fc35419c2d41c4c9b18d3, type: 3}
+      propertyPath: playerAssaultRifle
+      value: 
+      objectReference: {fileID: 318564106594598549, guid: 8e81da755b4cb9c418738c9795475f21, type: 3}
     - target: {fileID: 7477267155645300554, guid: 34dd221d7e4fc35419c2d41c4c9b18d3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

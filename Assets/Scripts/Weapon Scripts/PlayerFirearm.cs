@@ -11,7 +11,7 @@ public abstract class PlayerFirearm : MonoBehaviour
     [SerializeField] protected AudioClip fireFX;
 
     [Header("Weapon Attributes")]
-    [SerializeField] protected bool inInventory = false;
+    [SerializeField] public bool inInventory = false;
     [SerializeField] protected float damage;
     [SerializeField] protected float range;
     [SerializeField] protected float spreadRadius;
@@ -39,6 +39,11 @@ public abstract class PlayerFirearm : MonoBehaviour
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         inputManager = InputManager.Instance;
         audioManager = AudioManager.Instance;
+    }
+
+    void SetActive()
+    {
+        
     }
 
     //if this isn't stated - if weapon is disabled while canFire is disabled, weapon will not fire

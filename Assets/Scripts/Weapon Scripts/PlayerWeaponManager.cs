@@ -1,15 +1,11 @@
 using System.Collections;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
     protected Camera playerCamera;
-    [SerializeField] private int currentWeapon;
-
-    //note: old weapon inventory
-    [SerializeField] private GameObject[] weapons;
+    [SerializeField] private string currentWeaponKey;
 
     //private prefabs of weapons to go into playerWeaponInventory
     [SerializeField] private GameObject playerHandgun;
@@ -24,26 +20,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     void Awake()
     {
-        //create gameobjects and add correlating components - is there a way to reduce playerfirearm assignments?
-        //for all objects in hashtable, addcomponent playerfirearm?
-        playerHandgun.AddComponent<PlayerFirearm>();
-        playerAssaultRifle.AddComponent<PlayerFirearm>();
-        playerShotgun.AddComponent<PlayerFirearm>();
-
-        playerHandgun.AddComponent<Handgun>();
-        playerAssaultRifle.AddComponent<AssaultRifle>();
-        playerShotgun.AddComponent<Shotgun>();
-
-
-        //instantiate player weapons
-        Instantiate(playerHandgun, new Vector3(0, 0, 0), Quaternion.Identity);
-        Instantiate(playerAssaultRifle, new Vector3(0, 0, 0), Quaternion.Identity);
-        Instantiate(playerShotgun, new Vector3(0, 0, 0), Quaternion.Identity);
-
-        //add player weapons to weapon inventory hashtable
-        playerWeaponInventory.Add("PlayerHandgun", playerHandgun);
-        playerWeaponInventory.Add("PlayerAssaultRifle", playerAssaultRifle);
-        playerWeaponInventory.Add("PlayerShotgun", playerShotgun);
+        
     }
 
     void Start()
@@ -52,15 +29,32 @@ public class NewMonoBehaviourScript : MonoBehaviour
         inputManager = InputManager.Instance;
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
+        //instantiate player weapons
+        //make method to instantiate all weapons - look for child object - if it does not exist, make one
+        // playerHandgun = Instantiate(Resources.Load("Weapons/Handgun"), new Vector3(0, 0, 0), Quaternion.identity).GetComponent<GameObject>();
+        // playerAssaultRifle = Instantiate(Resources.Load("Weapons/Assault Rifle"), new Vector3(0, 0, 0), Quaternion.identity).GetComponent<GameObject>();
+        // playerShotgun = Instantiate(Resources.Load("Weapons/Shotgun"), new Vector3(0, 0, 0), Quaternion.identity).GetComponent<GameObject>();
+
+        //create gameobjects and add correlating components - is there a way to reduce playerfirearm assignments?
+        //for all objects in hashtable, addcomponent playerfirearm?
+        // playerHandgun.AddComponent<Handgun>();
+        // playerAssaultRifle.AddComponent<AssaultRifle>();
+        // playerShotgun.AddComponent<Shotgun>();
+
+        //add player weapons to weapon inventory hashtable
+        playerWeaponInventory.Add("PlayerHandgun", playerHandgun);
+        playerWeaponInventory.Add("PlayerAssaultRifle", playerAssaultRifle);
+        playerWeaponInventory.Add("PlayerShotgun", playerShotgun);
+
         //<old> go through each object in array and set SetActive to false.
         // - this array is filled prior to Start
-        foreach (GameObject weapon in weapons)
+        foreach (DictionaryEntry weapon in playerWeaponInventory)
         {
-            weapon.SetActive(false);
+            GameObject disableWeapon = weapon.Value;
+            weapon.Value.SetActive(false);
         }
 
         EquipDefaultWeapon();
-        weapons[0].SetActive(true);
     }
 
     // Update is called once per frame
@@ -76,21 +70,21 @@ public class NewMonoBehaviourScript : MonoBehaviour
     void EquipDefaultWeapon()
     {
         //select handgun as default weapon
-        SwapWeapon(0);
+        EquipHangun();
     }
 
     void EquipHangun()
     {
         if (inputManager.SelectHandgun())
         {
-            SwapWeapon(0);
+            SwapWeapon("PlayerHandgun");
         }
     }
     void EquipAssaultRifle()
     {
         if (inputManager.SelectAssaultRifle())
         {
-            SwapWeapon(1);
+            SwapWeapon("PlayerAssaultRifle");
         }
     }
 
@@ -98,23 +92,30 @@ public class NewMonoBehaviourScript : MonoBehaviour
     {
         if (inputManager.SelectShotgun())
         {
-            SwapWeapon(2);
+            SwapWeapon("PlayerShotgun");
         }
     }
 
-    void SwapWeapon(int selectedWeapon)
+    void SwapWeapon(string selectedWeaponKey)
     {
-        if(selectedWeapon.inInventory){
-            if(selectedWeapon != currentWeapon) //here, when implemented, also check if the weapon has been collected, yet
-                {
-                    weapons[currentWeapon].SetActive(false);
-                    weapons[selectedWeapon].SetActive(true);
-                    currentWeapon = selectedWeapon;
-                }
-        }
-        else
-        {
-            Debug.Log("Weapon not currently in inventory");
+        if(playerWeaponInventory.ContainsKey(selectedWeaponKey)){
+            PlayerFirearm Weapon = (PlayerFirearm) playerWeaponInventory[selectedWeaponKey];
+            if (Weapon.inInventory == false)
+            {
+                Debug.Log("Weapon not currently in inventory"); //display this to player
+            }
+            //check if swapping weapon is different than the one currently equipped
+            else if(selectedWeaponKey != currentWeaponKey) {
+                GameObject weaponToSwap = (GameObject) playerWeaponInventory[currentWeaponKey];
+                weaponToSwap.SetActive(false);
+                GameObject weaponToSwapIn = (GameObject) playerWeaponInventory[selectedWeaponKey];
+                weaponToSwapIn.SetActive(true);
+                currentWeaponKey = selectedWeaponKey;
+            }
+            else
+            {
+                Debug.Log("Already holding weapon"); //solely for debugging
+            }
         }
     }
 }
